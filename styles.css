@@ -328,7 +328,7 @@ p { color: var(--body); }
 .page-footer { position: absolute; left: 18mm; right: 34mm; bottom: 8.5mm; display: flex; justify-content: space-between; color: var(--muted); font-size: var(--text-xs); letter-spacing: .07em; text-transform: uppercase; }
 
 .visual-page { display: flex; flex-direction: column; }
-.workflow-figure { display: grid; flex: 1; align-content: center; margin: 8mm 0 0; }
+.workflow-figure { display: block; flex: 0 0 auto; margin: 24mm 0 0; }
 .workflow-figure img { display: block; width: 100%; height: auto; border: 1px solid var(--line); border-radius: 14px; background: #fff; }
 .workflow-figure figcaption { margin-top: 12px; color: var(--muted); font-size: var(--text-sm); line-height: 1.55; text-align: center; }
 
