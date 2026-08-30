@@ -58,7 +58,7 @@ button, input, textarea, select, code { font-family: inherit; }
   align-items: center;
   justify-content: space-between;
   min-height: 58px;
-  padding: 0 28px;
+  padding-inline: max(16px, calc((100vw - var(--page-w)) / 2));
   color: #f8f8f5;
   background: rgba(31, 31, 29, .94);
   backdrop-filter: blur(16px);
