@@ -332,9 +332,8 @@ p { color: var(--body); }
 .workflow-figure img { display: block; width: 100%; height: auto; border: 1px solid var(--line); border-radius: 14px; background: #fff; }
 .workflow-figure figcaption { margin-top: 12px; color: var(--muted); font-size: var(--text-sm); line-height: 1.55; text-align: center; }
 
-.landing { min-height: calc(100vh - 58px); padding: 7vw 6vw; background: var(--paper); }
-.landing-inner { max-width: 1080px; margin: 0 auto; }
-.landing h1 { max-width: 18ch; font-size: clamp(38px, 5.5vw, 64px); line-height: 1.16; }
+.landing-inner { width: 100%; }
+.landing h1 { max-width: none; font-size: 36px; line-height: 1.2; }
 .landing-title-line { white-space: nowrap; }
 .landing .vc-toc-title { margin-top: 78px; }
 .document-links { display: block; margin-top: 0; border-top: 1px solid var(--line); }
@@ -467,6 +466,7 @@ p { color: var(--body); }
     --title-lg: 36px;
   }
   .page { min-height: auto; padding: clamp(48px, 9.5vw, 20mm) clamp(42px, 8.5vw, 18mm) clamp(42px, 8.5vw, 18mm); }
+  .landing h1 { font-size: 34px; }
   .page-footer { left: clamp(42px, 8.5vw, 18mm); right: clamp(54px, 10vw, 34mm); }
   .page::after { right: clamp(42px, 8.5vw, 18mm); }
 }
