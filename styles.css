@@ -79,7 +79,9 @@ button, input, textarea, select, code { font-family: inherit; }
 
 .page {
   position: relative;
+  width: 100%;
   min-height: var(--page-h);
+  aspect-ratio: 210 / 297;
   padding: 20mm 18mm 18mm;
   overflow: hidden;
   background: var(--paper);
@@ -325,6 +327,11 @@ p { color: var(--body); }
 
 .page-footer { position: absolute; left: 18mm; right: 34mm; bottom: 8.5mm; display: flex; justify-content: space-between; color: var(--muted); font-size: var(--text-xs); letter-spacing: .07em; text-transform: uppercase; }
 
+.visual-page { display: flex; flex-direction: column; }
+.workflow-figure { display: grid; flex: 1; align-content: center; margin: 8mm 0 0; }
+.workflow-figure img { display: block; width: 100%; height: auto; border: 1px solid var(--line); border-radius: 14px; background: #fff; }
+.workflow-figure figcaption { margin-top: 12px; color: var(--muted); font-size: var(--text-sm); line-height: 1.55; text-align: center; }
+
 .landing { min-height: calc(100vh - 58px); padding: 7vw 6vw; background: var(--paper); }
 .landing-inner { max-width: 1080px; margin: 0 auto; }
 .landing h1 { max-width: 18ch; font-size: clamp(38px, 5.5vw, 64px); line-height: 1.16; }
@@ -449,11 +456,31 @@ p { color: var(--body); }
   .landing-title-line { white-space: normal; }
 }
 
+@media (min-width: 721px) and (max-width: 840px) {
+  :root {
+    --text-xs: 9px;
+    --text-sm: 11px;
+    --text-md: 13px;
+    --text-lg: 16px;
+    --title-sm: 15px;
+    --title-md: 25px;
+    --title-lg: 36px;
+  }
+  .page { min-height: auto; padding: clamp(48px, 9.5vw, 20mm) clamp(42px, 8.5vw, 18mm) clamp(42px, 8.5vw, 18mm); }
+  .page-footer { left: clamp(42px, 8.5vw, 18mm); right: clamp(54px, 10vw, 34mm); }
+  .page::after { right: clamp(42px, 8.5vw, 18mm); }
+}
+
 @media (max-width: 720px) {
-  .site-bar { padding: 0 14px; }
+  .site-bar { flex-wrap: wrap; gap: 8px; padding: 10px 14px; }
   .site-bar strong { font-size: 13px; }
+  .site-bar nav { width: 100%; overflow-x: auto; padding-bottom: 2px; scrollbar-width: none; }
+  .site-bar nav::-webkit-scrollbar { display: none; }
+  .site-bar nav a { flex: 0 0 auto; }
   .document { width: 100%; margin: 0; gap: 0; }
-  .page { min-height: auto; padding: 42px 24px 64px; box-shadow: none; }
+  .page { min-height: auto; aspect-ratio: auto; padding: 42px 24px 64px; box-shadow: none; }
+  .page::after { right: 24px; bottom: 18px; }
+  .page-footer { position: static; gap: 8px 20px; margin-top: 34px; padding-top: 12px; border-top: 1px solid var(--line); flex-wrap: wrap; }
   h1 { font-size: 34px; line-height: 1.22; }
   .grid-2, .grid-3, .document-links, .do-dont { grid-template-columns: 1fr; }
   .flow { grid-template-columns: 1fr; gap: 6px; }
@@ -481,6 +508,10 @@ p { color: var(--body); }
   .vc-commits { border-right: 0; border-bottom: 1px solid var(--line); }
   .vc-table-wrap { overflow-x: auto; }
   .vc-table { min-width: 720px; }
+  .workflow-figure { display: block; margin-top: 28px; }
+  .workflow-figure img { width: min(860px, 150vw); max-width: none; }
+  .workflow-figure { overflow-x: auto; padding-bottom: 8px; }
+  .workflow-figure figcaption { width: 100%; text-align: left; }
 }
 
 @media print {
@@ -488,6 +519,6 @@ p { color: var(--body); }
   body { background: #fff; }
   .site-bar { display: none; }
   .document { display: block; width: auto; margin: 0; }
-  .page { width: 210mm; height: 297mm; min-height: 297mm; break-after: page; box-shadow: none; }
+  .page { width: 210mm; height: 297mm; min-height: 297mm; aspect-ratio: auto; break-after: page; box-shadow: none; }
   .page:last-child { break-after: auto; }
 }
