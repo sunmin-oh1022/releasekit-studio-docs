@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>기획자를 위한 형상관리</title>
+  <meta name="description" content="기획 산출물의 결정과 변경 이력을 GitLab으로 관리하는 기획자용 형상관리 가이드">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <header class="site-bar">
+    <strong><a href="./index.html" style="text-decoration:none">ReleaseKit Studio</a></strong>
+    <nav aria-label="문서"><a href="./analysis.html">Studio 분석</a><a href="./plugin-analysis.html">Plugin 분석</a><a href="./guide.html">Studio&amp;Plugin 활용 가이드</a><a href="./version-control-guide.html" aria-current="page">형상관리 가이드</a></nav>
+  </header>
+  <main class="document">
+    <article class="page cover vc-page" data-page="01 / 11">
+      <div>
+        <p class="eyebrow">Planner’s guide · GitLab</p>
+        <h1>기획산출물도<br><span class="marker-underline">형상관리</span>가 필요하다</h1>
+        <p class="lead">형상관리는 개발자만의 도구가 아닙니다. 팀이 내린 결정을 <strong>언제·누가·왜</strong>까지 함께 남기고, 그 기록을 AI에게 통째로 물려주는 방법입니다.</p>
+        <h3 class="vc-toc-title">목차</h3>
+        <div class="vc-agenda" aria-label="목차">
+          <a href="#vc-part-1"><strong>형상관리의 중요성</strong><span>결정의 이유를 남겨야 하는 이유</span><small>P.02</small></a>
+          <a href="#vc-part-2"><strong>개념 3개</strong><span>저장소 · 커밋 · 히스토리</span><small>P.03</small></a>
+          <a href="#vc-part-3"><strong>도구 구분</strong><span>Git · GitHub · GitLab</span><small>P.04</small></a>
+          <a href="#vc-part-4"><strong>개발자의 순서</strong><span>브랜치 → MR → 머지</span><small>P.05</small></a>
+          <a href="#vc-part-5"><strong>GitLab 웹 사용법</strong><span>저장소를 만들고 MR 보내기</span><small>P.06</small></a>
+          <a href="#vc-part-6"><strong>우리 팀 적용</strong><span>저장소 설계와 Claude 연결</span><small>P.07</small></a>
+        </div>
+      </div>
+      <footer class="cover-meta"><span>기획자를 위한 형상관리</span></footer>
+    </article>
+
+    <article class="page vc-page" id="vc-part-1" data-page="02 / 11">
+      <p class="eyebrow">Part 1 · Why version control</p>
+      <h2>형상관리의 중요성</h2>
+      <p><code>기획서_최종_최종_진짜최종_v3.pptx</code>를 놀리는 농담은 다들 하지만, 진짜 손해는 다른 데서 납니다. 파일은 어떻게든 찾습니다. 못 찾는 건 <strong>왜 그렇게 바꿨는지</strong>입니다.</p>
+      <p>반년 뒤 누군가 묻습니다. “자동 로그인은 왜 기본 꺼짐이죠?” 아무도 기억하지 못합니다. 당시 슬랙 스레드는 밀려났고 결정한 사람은 다른 팀으로 갔습니다. 그래서 팀은 <strong>같은 논의를 다시 합니다.</strong> 이게 실제 비용입니다.</p>
+      <div class="vc-contrast">
+        <section class="vc-panel"><strong>지금 · 공유 드라이브</strong><pre>로그인기획서.pptx
+로그인기획서_v2.pptx
+로그인기획서_v2_수정.pptx
+로그인기획서_최종.pptx
+로그인기획서_최종_보안반영.pptx
+로그인기획서_최종_진짜.pptx</pre><small>무엇이 바뀌었는지 알려면 두 파일을 눈으로 비교해야 합니다. 왜 바꿨는지는 어디에도 없습니다.</small></section>
+        <section class="vc-panel"><strong>앞으로 · 저장소</strong><pre>d3b8e77  자동 로그인 기본값 해제 — 보안팀 검토 의견
+c9a0f52  비밀번호 찾기 진입점 추가 — CS 문의 1위
+b7e4d19  소셜 로그인 추가 — 신규 가입 이탈률 개선
+a1f2c3d  로그인 화면 기획서 초안</pre><small>파일은 하나입니다. 변경마다 누가·언제·왜가 붙어 쌓이고, 어느 시점으로든 되돌아갈 수 있습니다.</small></section>
+      </div>
+      <div class="statement">형상관리는 파일을 정리하는 기술이 아니라, 결정의 이유를 잃지 않는 기술입니다.</div>
+      <section class="card"><h3>기획자에게 중요한 이유</h3><p>최신본을 찾는 일보다 더 중요한 것은 결정의 근거를 재사용하는 일입니다. 변경 이력이 남으면 신규 담당자와 개발자, AI가 같은 맥락에서 다음 작업을 시작할 수 있습니다.</p></section>
+      <footer class="page-footer"><span>기획자를 위한 형상관리</span><span>형상관리의 중요성</span></footer>
+    </article>
+
+    <article class="page compact-page vc-page" id="vc-part-2" data-page="03 / 11">
+      <p class="eyebrow">Part 2 · Three concepts</p>
+      <h2>먼저 이해할 개념 세 개</h2>
+      <p class="lead">Git에는 용어가 많지만 형상관리의 기본은 저장소·커밋·히스토리입니다. 나머지는 이 셋의 응용입니다.</p>
+      <div class="vc-tools">
+        <section class="vc-tool"><strong>저장소</strong><em>Repository / Repo</em><p>프로젝트 하나에 해당하는 폴더. 모든 파일과 <strong>지금까지의 변경 이력</strong>이 함께 들어 있습니다. 공유 드라이브 폴더에 타임머신이 붙었다고 보면 됩니다.</p></section>
+        <section class="vc-tool"><strong>커밋</strong><em>Commit</em><p>저장. 단, 덮어쓰기가 아니라 <strong>한 층 쌓기</strong>입니다. 저장할 때 메시지를 남기며, 이 한 줄이 나중에 팀을 살립니다.</p></section>
+        <section class="vc-tool"><strong>히스토리</strong><em>History / Log</em><p>쌓인 커밋의 목록. 원하는 시점의 문서를 보고 필요하면 되돌릴 수 있습니다. 게임의 세이브 포인트와 같습니다.</p></section>
+      </div>
+      <p><strong>아래 커밋을 눌러보세요.</strong> 실제 기획 문서가 네 번의 커밋을 거치며 변한 기록입니다.</p>
+      <div class="vc-walker" id="vcWalker">
+        <div class="vc-walker-head"><span>specs/login/기획서.md</span><span>커밋을 선택하세요</span></div>
+        <div class="vc-walker-body"><div class="vc-commits" id="vcCommitList"></div><div class="vc-diff" id="vcDiff"></div></div>
+        <div class="vc-walker-foot" id="vcWalkerFoot"></div>
+      </div>
+      <div class="vc-goodbad"><strong>커밋 메시지는 <span class="marker-underline">무엇</span>보다 <span class="marker-underline">왜</span>를 씁니다.</strong><span class="bad">× 기획서 수정 / 최종본 / 오타 수정</span><span class="good">○ 자동 로그인 기본값 해제 — 보안팀 8/20 검토 의견 반영</span></div>
+      <footer class="page-footer"><span>기획자를 위한 형상관리</span><span>저장소 · 커밋 · 히스토리</span></footer>
+    </article>
+
+    <article class="page vc-page" id="vc-part-3" data-page="04 / 11">
+      <p class="eyebrow">Part 3 · Tools</p>
+      <h2>Git · GitHub · GitLab의 차이</h2>
+      <p class="lead">Git은 기술이고, GitHub과 GitLab은 그 기술을 웹에서 함께 쓰게 해주는 서비스입니다.</p>
+      <div class="vc-tools">
+        <section class="vc-tool"><strong>Git</strong><em>기술 · 2005</em><p>버전을 관리하는 프로그램 그 자체입니다. 내 컴퓨터 안에서 동작하고 인터넷이 없어도 작동합니다.</p></section>
+        <section class="vc-tool"><strong>GitHub</strong><em>서비스 · Microsoft</em><p>Git 저장소를 인터넷에 올려 여럿이 함께 쓰는 서비스입니다. 오픈소스 세계의 사실상 표준입니다.</p></section>
+        <section class="vc-tool"><strong>GitLab</strong><em>서비스 · 우리 회사</em><p>GitHub과 하는 일은 거의 같습니다. 회사 서버에 직접 설치해 운영할 수 있어 우리 회사가 사용합니다.</p></section>
+      </div>
+      <section class="card accent"><h3>회사가 GitHub이 아니라 GitLab을 주는 이유</h3><p>GitLab은 자체 서버에서 운영할 수 있습니다(self-hosted). 코드와 문서가 회사 네트워크 밖으로 나가지 않고, 접근 권한과 감사 기록을 회사가 통제합니다. 기획 문서에는 미출시 기능, 매출 수치, 파트너 정보가 들어가므로 팀 지식 저장소로 GitLab이 적합합니다.</p></section>
+      <div class="statement">GitHub의 <strong>Pull Request(PR)</strong>와 GitLab의 <strong>Merge Request(MR)</strong>는 같은 기능입니다.</div>
+      <section class="card"><h3>세 이름을 구분하는 가장 쉬운 법</h3><p>Git은 변경 이력을 만드는 엔진입니다. GitHub과 GitLab은 그 엔진을 팀이 함께 쓰도록 저장소, 리뷰, 권한, 이슈 화면을 제공하는 협업 공간입니다.</p></section>
+      <footer class="page-footer"><span>기획자를 위한 형상관리</span><span>도구 구분</span></footer>
+    </article>
+
+    <article class="page compact-page vc-page" id="vc-part-4" data-page="05 / 11">
+      <p class="eyebrow">Part 4 · Workflow</p>
+      <h2>개발자가 일하는 순서</h2>
+      <p class="lead">“브랜치 따서 작업 중”, “MR 올렸으니 리뷰”, “머지하고 배포”는 모두 아래 흐름입니다.</p>
+      <div class="vc-branch" role="img" aria-label="main에서 작업 브랜치가 갈라져 커밋을 거친 뒤 다시 합쳐지는 흐름">
+        <div class="vc-branch-track"><div class="vc-main-line"></div><div class="vc-work-line"></div><i class="vc-dot d1"></i><i class="vc-dot d2"></i><i class="vc-dot d3"></i><i class="vc-dot d4"></i><i class="vc-dot d5"></i></div>
+        <div class="vc-branch-label"><span>main · 확정본</span><span>feature/소셜로그인 · 작업 사본</span><span>main · 반영 완료</span></div>
+      </div>
+      <div class="vc-process">
+        <section><strong>브랜치 만들기</strong><small>branch</small><span>확정본은 그대로 두고 작업용 사본을 만듭니다. 여러 명이 동시에 다른 사본에서 일할 수 있습니다.</span></section>
+        <section><strong>커밋하기</strong><small>commit</small><span>의미 있는 결정 단위마다 이유를 적고 저장합니다. 한 번에 몰아서 하지 않습니다.</span></section>
+        <section><strong>푸시하기</strong><small>push</small><span>내 컴퓨터의 커밋을 GitLab 서버로 올립니다. 웹에서 편집하면 커밋과 푸시가 함께 일어납니다.</span></section>
+        <section><strong>MR 만들기</strong><small>merge request</small><span>“작업 사본의 변경을 확정본에 반영해 주세요”라고 요청하고 리뷰어와 이유를 적습니다.</span></section>
+        <section><strong>리뷰하기</strong><small>review</small><span>바뀐 줄에 직접 댓글을 답니다. “3페이지 두 번째 문단”이라고 설명할 필요가 없습니다.</span></section>
+        <section><strong>머지하기</strong><small>merge</small><span>승인 후 사본의 변경을 확정본에 합칩니다. 이 순간이 <span class="marker-underline">반영 완료</span>입니다.</span></section>
+      </div>
+      <div class="callout"><b>충돌</b><p>두 사람이 같은 줄을 다르게 고치면 시스템이 어느 쪽이 맞는지 사람에게 선택을 요청합니다. 사고가 아니라 판단 요청입니다.</p></div>
+      <footer class="page-footer"><span>기획자를 위한 형상관리</span><span>브랜치 → MR → 머지</span></footer>
+    </article>
+
+    <article class="page compact-page vc-page" id="vc-part-5" data-page="06 / 11">
+      <p class="eyebrow">Part 5 · GitLab web workflow</p>
+      <h2>브라우저에서 GitLab 작업을 따라갑니다</h2>
+      <p class="lead">터미널이나 별도 프로그램 없이 GitLab 웹 화면에서 저장소 생성부터 리뷰와 반영까지 진행합니다.</p>
+      <div class="vc-process">
+        <section><strong>저장소 만들기</strong><span>우상단 <code>+</code> → New project → Create blank project. 이름은 <code>planning-wiki-본인이름</code>. Internal 또는 Private을 선택하고 README 초기화를 체크합니다.</span></section>
+        <section><strong>확정본에 커밋</strong><span><code>README.md</code>의 Edit single file에서 팀 소개를 씁니다. 메시지에 “저장소 소개 문구 추가”라고 쓰고 커밋합니다.</span></section>
+        <section><strong>히스토리와 diff 확인</strong><span>Code → Commits에서 방금 커밋을 엽니다. 추가된 줄과 삭제된 줄을 색으로 확인합니다.</span></section>
+        <section><strong>브랜치에서 새 문서 작성</strong><span><code>+</code> → New file. <code>decisions/2026-08-23-첫-팀회의.md</code>를 만들고 커밋할 때 <strong>Create a new branch</strong>를 선택합니다.</span></section>
+        <section><strong>MR 올리기</strong><span>Create merge request를 누릅니다. 왜 문서를 추가했는지 쓰고 Reviewer를 지정합니다.</span></section>
+        <section><strong>리뷰하고 머지</strong><span>MR의 Changes 탭을 열어 바뀐 줄에 댓글을 달고 Merge를 누릅니다. 확정본 반영을 확인합니다.</span></section>
+      </div>
+      <div class="statement">웹에서 직접 편집하면 커밋과 푸시가 한 번에 일어납니다. 핵심은 브랜치에서 작업하고 MR로 합의하는 흐름입니다.</div>
+      <div class="callout"><b>막히면</b><p>GitLab 버전에 따라 메뉴 위치와 이름이 다를 수 있습니다. 상단 검색창에 <code>new file</code>, <code>merge request</code> 같은 영문 키워드를 입력하세요.</p></div>
+      <footer class="page-footer"><span>기획자를 위한 형상관리</span><span>GitLab 웹 사용법</span></footer>
+    </article>
+
+    <article class="page compact-page vc-page" id="vc-part-6" data-page="07 / 11">
+      <p class="eyebrow">Part 6 · Choosing a home · 1/2</p>
+      <h2>저장소에 쌓을 것과 쌓지 않을 것</h2>
+      <p class="lead">모든 문서를 GitLab으로 옮길 필요는 없습니다. 편집 방식과 기록 목적에 맞게 공간을 고릅니다.</p>
+      <div class="vc-table-wrap"><table class="vc-table">
+        <thead><tr><th>기준</th><th>Confluence 위키<br><small>사내 서버</small></th><th>Google Drive<br><small>공동 편집</small></th><th>GitLab 저장소<br><small>형상관리</small></th></tr></thead>
+        <tbody>
+          <tr><th>편집 편의성</th><td><span class="vc-tag">강점</span><br>위키 에디터와 실시간 공동 편집을 지원합니다.</td><td><span class="vc-tag">강점</span><br>Docs·Sheets·Slides 동시 편집이 가장 매끄럽습니다.</td><td><span class="vc-tag warn">제한</span><br>Markdown 텍스트 기반이라 처음에는 불편합니다.</td></tr>
+          <tr><th>pptx · xlsx 원본</th><td><span class="vc-tag warn">보통</span><br>첨부 미리보기와 버전이 남지만 편집하려면 내려받습니다.</td><td><span class="vc-tag">강점</span><br>원본 형식 그대로 보관하고 브라우저에서 편집합니다.</td><td><span class="vc-tag no">부적합</span><br>올릴 수 있지만 변경 비교는 텍스트 파일에만 작동합니다.</td></tr>
+          <tr><th>무엇이 바뀌었나</th><td><span class="vc-tag">강점</span><br>버전 비교 화면에서 바뀐 부분을 표시합니다.</td><td>버전 기록에서 확인합니다. Docs는 문자 단위까지 남습니다.</td><td><span class="vc-tag">강점</span><br>diff에서 줄 단위 추가·삭제를 색으로 구분합니다.</td></tr>
+          <tr><th>왜 바꿨나</th><td><span class="vc-tag warn">선택</span><br>변경 설명을 적을 수 있지만 비워도 저장됩니다.</td><td><span class="vc-tag warn">선택</span><br>버전에 이름을 붙일 수 있지만 필수는 아닙니다.</td><td><span class="vc-tag">강점</span><br>커밋 메시지가 필수라 이유 없이 저장할 수 없습니다.</td></tr>
+          <tr><th>이력 보관</th><td><span class="vc-tag">강점</span><br>페이지 버전이 남고 이전 버전으로 복원합니다.</td><td><span class="vc-tag warn">주의</span><br>업로드 파일은 조건에 따라 과거 버전이 삭제될 수 있어 영구 보관 지정이 필요합니다.</td><td><span class="vc-tag">강점</span><br>저장소를 지우지 않는 한 모든 커밋이 남습니다.</td></tr>
+        </tbody>
+      </table></div>
+      <section class="card"><h3>여기까지의 선택 기준</h3><p>실시간 공동 편집과 원본 형식 보존은 위키·공용드라이브가 강합니다. 변경 이유를 의무적으로 남기고 텍스트 차이를 검토해야 한다면 GitLab이 강합니다.</p></section>
+      <footer class="page-footer"><span>기획자를 위한 형상관리</span><span>도구 비교 1/2</span></footer>
+    </article>
+
+    <article class="page compact-page vc-page" data-page="08 / 11">
+      <p class="eyebrow">Part 6 · Choosing a home · 2/2</p>
+      <h2>승인·복원·AI 연결까지 비교합니다</h2>
+      <div class="vc-table-wrap"><table class="vc-table">
+        <thead><tr><th>기준</th><th>Confluence 위키</th><th>Google Drive</th><th>GitLab 저장소</th></tr></thead>
+        <tbody>
+          <tr><th>리뷰 · 승인</th><td><span class="vc-tag warn">제한</span><br>기본 승인 절차가 없습니다.</td><td><span class="vc-tag warn">조건부</span><br>댓글·제안은 가능하며 승인 기능은 에디션에 따라 다릅니다.</td><td><span class="vc-tag">강점</span><br>MR이 승인 절차이며 승인 전 반영을 막을 수 있습니다.</td></tr>
+          <tr><th>팀 소유권</th><td><span class="vc-tag">강점</span><br>스페이스 단위로 권한을 관리합니다.</td><td><span class="vc-tag">강점</span><br>공용드라이브는 팀 소유라 담당자가 떠나도 남습니다.</td><td><span class="vc-tag">강점</span><br>저장소를 그룹이 소유합니다.</td></tr>
+          <tr><th>데이터 위치</th><td><span class="vc-tag">사내</span><br>사내 서버에서 운영합니다.</td><td><span class="vc-tag warn">외부</span><br>기밀 문서는 사내 정책 확인이 필요합니다.</td><td><span class="vc-tag">사내</span><br>사내 서버에서 운영합니다.</td></tr>
+          <tr><th>전체 시점 복원</th><td><span class="vc-tag warn">제한</span><br>페이지 단위로 되돌립니다.</td><td><span class="vc-tag warn">제한</span><br>파일 단위로 되돌립니다.</td><td><span class="vc-tag">강점</span><br>저장소 전체를 특정 커밋 시점으로 복원합니다.</td></tr>
+          <tr><th>AI에 폴더째 전달</th><td><span class="vc-tag no">제한</span><br>페이지가 서버 안에 있어 파일로 바로 내려오지 않습니다.</td><td><span class="vc-tag warn">제한</span><br>다른 AI 도구에 넘기려면 파일을 내려받아야 합니다.</td><td><span class="vc-tag">강점</span><br>clone 한 번으로 저장소 전체가 내 컴퓨터 폴더가 됩니다.</td></tr>
+          <tr><th>개발팀 연결</th><td><span class="vc-tag warn">보통</span><br>Jira 연결은 강하지만 코드와 같은 공간은 아닙니다.</td><td><span class="vc-tag no">분리</span><br>개발 작업 공간과 따로 놉니다.</td><td><span class="vc-tag">강점</span><br>이슈와 MR로 기획과 개발을 연결합니다.</td></tr>
+        </tbody>
+      </table></div>
+      <section class="card accent"><h3>온프레미스에서 갈리는 지점</h3><p>사내 위키는 외부 AI가 직접 읽기 어렵습니다. GitLab은 같은 사내 서버에 있어도 <strong>clone하면 전체가 내 컴퓨터 폴더가 되고</strong>, 로컬에서 동작하는 Claude Code가 그 폴더를 읽습니다. 데이터 반출 없이 문서를 묶음으로 다룰 수 있는 구조입니다.</p></section>
+      <div class="statement">사람이 읽는 문서는 위키에, 이력이 남아야 하는 것은 저장소에.</div>
+      <footer class="page-footer"><span>기획자를 위한 형상관리</span><span>도구 비교 2/2</span></footer>
+    </article>
+
+    <article class="page compact-page vc-page" data-page="09 / 11">
+      <p class="eyebrow">Part 6 · Repository design</p>
+      <h2>우리 팀의 첫 저장소를 설계합니다</h2>
+      <div class="vc-choice">
+        <section><strong>위키에 두는 것</strong><p>조직 공지와 온보딩<br>회의록과 진행 상황<br>프로세스와 정책<br>여러 팀이 보는 가이드</p></section>
+        <section><strong>공용드라이브에 두는 것</strong><p>대외 제출용 pptx·xlsx<br>디자인 원본과 이미지<br>계약서와 스캔본<br>동시 편집하는 시트</p></section>
+        <section><strong>저장소에 두는 것</strong><p>확정된 기획서<br>의사결정 기록<br>용어·정책의 근거<br>AI가 묶음으로 읽을 자료</p></section>
+      </div>
+      <p>바꾼 이유가 강제로 남아야 하는가, 승인을 거쳐야 반영되게 할 것인가, AI가 폴더째 읽어야 하는가. 하나라도 해당하면 저장소에 둡니다. 원본은 저장소에 두고 위키는 링크를 제공하는 입구로 쓸 수도 있습니다.</p>
+      <pre class="vc-tree"><b>planning-wiki/</b>
+├─ README.md                  저장소 사용법
+├─ glossary.md                팀 용어 사전
+├─ <b>decisions/</b>                 의사결정 기록 · 한 결정에 파일 하나
+│  └─ 2026-08-23-온보딩-플로우-변경.md
+├─ <b>specs/</b>                     기능별 확정 기획서
+│  ├─ login/
+│  └─ onboarding/
+├─ <b>research/</b>                  유저 리서치와 경쟁사 분석
+└─ <b>templates/</b>                 기획서·결정 기록 템플릿</pre>
+      <section class="card accent"><h3>가장 중요한 것은 <code>decisions/</code> 폴더</h3><p>문서 하나에 다섯 줄이면 충분합니다. 무엇을 정했나 / 왜 정했나 / 어떤 대안을 검토하고 왜 버렸나 / 누가 참여했나 / 언제 다시 볼 것인가. 이 기록이 쌓이면 신규 입사자 온보딩과 “왜 그렇게 했죠?”라는 질문에 바로 답할 수 있습니다.</p></section>
+      <div class="callout"><b>시작 원칙</b><p>처음부터 완벽하게 설계하지 않습니다. 최소 구조로 시작하고 실제 자료가 쌓인 뒤 3개월 후 다시 정리합니다.</p></div>
+      <footer class="page-footer"><span>기획자를 위한 형상관리</span><span>저장소 구조 제안</span></footer>
+    </article>
+
+    <article class="page vc-page" data-page="10 / 11">
+      <p class="eyebrow">Part 7 · Working with Claude</p>
+      <h2>Claude를 쓰기 위한 전제</h2>
+      <p class="lead">Claude 같은 AI 개발 도구는 파일과 폴더를 통째로 읽고 씁니다. 위키 한 페이지를 복사해 묻는 것과 팀 저장소 전체를 연결하는 것은 다른 일입니다.</p>
+      <div class="grid-2">
+        <section class="card accent"><h3>저장소가 있으면 가능해지는 질문</h3><p>“로그인 관련 결정을 모아줘”<br>“신규 기능이 기존 결정과 충돌하는지 찾아줘”<br>“팀 용어 사전에 맞춰 표현을 통일해줘”</p></section>
+        <section class="card"><h3>Plugin과 Skill도 결국 파일</h3><p>플러그인과 킷도 텍스트 파일 묶음입니다. 저장소에 올리면 팀이 같은 버전을 쓰고, 누가 무엇을 왜 고쳤는지 남습니다.</p></section>
+      </div>
+      <div class="callout"><b>외우지 않아도 되는 것</b><p><code>git commit -m</code> 같은 명령어는 외울 필요가 없습니다. Claude에게 커밋과 푸시를 요청할 수 있습니다. 다만 브랜치를 만들 상황인지, 지금 머지해도 되는지는 사람이 판단해야 합니다.</p></div>
+      <h3 style="margin-top:24px">환경을 올리는 순서</h3>
+      <p>한 번에 터미널까지 갈 필요는 없습니다. 대부분의 기획자는 STEP 2에서 멈춰도 충분합니다.</p>
+      <div class="vc-ladder">
+        <section><small>STEP 0</small><div><strong>GitLab 웹 화면</strong><span>설치 없이 문서 읽기·쓰기, 리뷰, 승인까지 합니다. 팀 전원이 익혀야 합니다.</span></div></section>
+        <section><small>STEP 1</small><div><strong>VS Code + GitLab 연결</strong><span>웹 편집기가 답답해질 때 저장소를 clone하고 버튼으로 커밋·푸시합니다.</span></div></section>
+        <section><small>STEP 2</small><div><strong>Claude Code 붙이기</strong><span>저장소 폴더를 통째로 연결하고 Git 명령은 Claude에게 요청합니다.</span></div></section>
+        <section><small>STEP 3</small><div><strong>터미널에서 직접 · 선택</strong><span>관심 있는 사람만 익힙니다. 직접 하지 않아도 문제없습니다.</span></div></section>
+      </div>
+      <footer class="page-footer"><span>기획자를 위한 형상관리</span><span>Claude 연결</span></footer>
+    </article>
+
+    <article class="page compact-page vc-page" data-page="11 / 11">
+      <p class="eyebrow">Appendix · Glossary</p>
+      <h2>개발 용어 정리</h2>
+      <p class="lead">회의에서 자주 들리는 영어 표현과 기획자 관점의 쉬운 뜻입니다.</p>
+      <div class="vc-glossary">
+        <section><strong>Repository</strong><small>저장소 · repo</small><span>프로젝트 파일과 모든 변경 이력이 함께 들어 있는 폴더</span></section>
+        <section><strong>Commit</strong><small>커밋 · 저장</small><span>이유를 적고 변경을 한 층 쌓는 저장</span></section>
+        <section><strong>Branch</strong><small>브랜치 · 작업 사본</small><span>확정본을 건드리지 않고 작업하는 독립 사본</span></section>
+        <section><strong>main</strong><small>메인 브랜치 · 확정본</small><span>팀이 합의한 상태를 유지하는 기준 브랜치</span></section>
+        <section><strong>Merge</strong><small>머지 · 병합</small><span>작업 사본의 변경을 확정본에 합치는 일</span></section>
+        <section><strong>Merge Request</strong><small>MR · 병합 요청</small><span>GitLab의 리뷰와 승인 요청</span></section>
+        <section><strong>Pull Request</strong><small>PR · 병합 요청</small><span>GitHub에서 MR을 부르는 이름</span></section>
+        <section><strong>Diff</strong><small>디프 · 변경 비교</small><span>두 시점 사이의 추가와 삭제만 보여주는 화면</span></section>
+        <section><strong>Clone</strong><small>클론 · 내려받기</small><span>서버 저장소 전체를 내 컴퓨터로 복사</span></section>
+        <section><strong>Pull</strong><small>풀 · 최신화</small><span>서버의 최신 변경을 내 컴퓨터로 내려받기</span></section>
+        <section><strong>Push</strong><small>푸시 · 올리기</small><span>내 컴퓨터의 커밋을 서버로 올리기</span></section>
+        <section><strong>Checkout</strong><small>체크아웃 · 이동</small><span>작업할 브랜치를 바꾸는 일</span></section>
+        <section><strong>Conflict</strong><small>컨플릭트 · 충돌</small><span>같은 줄의 서로 다른 변경을 사람이 선택해야 하는 상태</span></section>
+        <section><strong>Revert</strong><small>리버트 · 되돌리기</small><span>기록을 남긴 채 반영된 변경을 취소</span></section>
+        <section><strong>Issue</strong><small>이슈 · 할 일</small><span>논의하거나 처리할 작업 하나</span></section>
+        <section><strong>Markdown</strong><small>.md · 마크다운</small><span>제목과 목록을 기호로 표현하는 텍스트 형식</span></section>
+        <section><strong>README</strong><small>README.md · 안내문</small><span>저장소 첫 화면에 보이는 사용 안내</span></section>
+      </div>
+      <div class="statement">명령어보다 먼저 익힐 것은 판단 기준입니다. 어디서 작업하고, 무엇을 기록하고, 언제 리뷰와 승인을 요청할지 이해하면 됩니다.</div>
+      <footer class="page-footer"><span>기획자를 위한 형상관리</span><span>용어 사전</span></footer>
+    </article>
+  </main>
+
+  <script>
+  (function () {
+    "use strict";
+    var base = ["# 로그인 화면 기획", "", "## 입력 항목", "- 이메일", "- 비밀번호", "- 자동 로그인 체크박스 (기본 ON)"];
+    var commits = [
+      {hash:"a1f2c3d", who:"김기획 · 8월 12일", msg:"로그인 화면 기획서 초안", note:"첫 커밋입니다. 모든 줄이 새로 추가되어 초록색으로 표시됩니다.", lines:base.map(function(t){return {t:t,s:"add"};})},
+      {hash:"b7e4d19", who:"박디자인 · 8월 14일", msg:"소셜 로그인 추가 — 신규 가입 이탈률 개선", note:"무엇을 추가했는지는 화면이, 왜 추가했는지는 커밋 메시지가 설명합니다.", lines:base.map(function(t){return {t:t,s:"same"};}).concat([{t:"",s:"add"},{t:"## 소셜 로그인",s:"add"},{t:"- 카카오",s:"add"},{t:"- 구글",s:"add"}])},
+      {hash:"c9a0f52", who:"김기획 · 8월 18일", msg:"비밀번호 찾기 진입점 추가 — 7월 CS 문의 1위 대응", note:"근거가 커밋 메시지에 남아 있어 나중에도 추가 이유를 확인할 수 있습니다.", lines:base.map(function(t){return {t:t,s:"same"};}).concat([{t:"",s:"same"},{t:"## 소셜 로그인",s:"same"},{t:"- 카카오",s:"same"},{t:"- 구글",s:"same"},{t:"",s:"add"},{t:"## 비밀번호 찾기",s:"add"},{t:"- 비밀번호 입력창 우측에 배치",s:"add"}])},
+      {hash:"d3b8e77", who:"이개발 · 8월 21일", msg:"자동 로그인 기본값 해제 — 보안팀 8/20 검토 의견", note:"한 줄이 삭제되고 한 줄이 추가됐습니다. 작은 변경일수록 이유 기록이 중요합니다.", lines:[{t:"# 로그인 화면 기획",s:"same"},{t:"",s:"same"},{t:"## 입력 항목",s:"same"},{t:"- 이메일",s:"same"},{t:"- 비밀번호",s:"same"},{t:"- 자동 로그인 체크박스 (기본 ON)",s:"del"},{t:"- 자동 로그인 체크박스 (기본 OFF)",s:"add"},{t:"",s:"same"},{t:"## 소셜 로그인",s:"same"},{t:"- 카카오",s:"same"},{t:"- 구글",s:"same"},{t:"",s:"same"},{t:"## 비밀번호 찾기",s:"same"},{t:"- 비밀번호 입력창 우측에 배치",s:"same"}]}
+    ];
+    var list = document.getElementById("vcCommitList"), diff = document.getElementById("vcDiff"), foot = document.getElementById("vcWalkerFoot"), buttons = [];
+    if (!list || !diff || !foot) return;
+    function render(index) {
+      var commit = commits[index];
+      buttons.forEach(function(button, i){ button.setAttribute("aria-pressed", i === index ? "true" : "false"); });
+      diff.textContent = "";
+      commit.lines.forEach(function(line){ var el = document.createElement("span"); el.className = "vc-line " + line.s; el.textContent = line.t || " "; diff.appendChild(el); });
+      foot.textContent = commit.hash + " · " + commit.note;
+    }
+    commits.slice().reverse().forEach(function(commit, reverseIndex){
+      var index = commits.length - 1 - reverseIndex, button = document.createElement("button");
+      button.type = "button"; button.className = "vc-commit"; button.setAttribute("aria-pressed", "false");
+      button.innerHTML = "<strong></strong><small></small>"; button.querySelector("strong").textContent = commit.msg; button.querySelector("small").textContent = commit.hash + " · " + commit.who;
+      button.addEventListener("click", function(){ render(index); }); list.appendChild(button); buttons[index] = button;
+    });
+    render(0);
+  }());
+  </script>
+</body>
+</html>

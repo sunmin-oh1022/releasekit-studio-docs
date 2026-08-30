@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ReleaseKit Studio 1.0 기획자 활용 가이드</title>
+  <meta name="description" content="Releasekit Plugin과 ReleaseKit Studio 1.0을 활용하는 기획자 실무 가이드">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <header class="site-bar">
+    <strong><a href="./index.html" style="text-decoration:none">ReleaseKit Studio</a></strong>
+    <nav aria-label="문서"><a href="./analysis.html">Studio 분석</a><a href="./plugin-analysis.html">Plugin 분석</a><a href="./guide.html" aria-current="page">Studio&amp;Plugin 활용 가이드</a><a href="./version-control-guide.html">형상관리 가이드</a></nav>
+  </header>
+  <main class="document">
+    <article class="page cover" data-page="01 / 11">
+      <div>
+        <p class="eyebrow">Planner’s guide · Version 1.0</p>
+        <h1>Plugin으로 만들고<br>Studio로 <span class="marker-underline">흐름을 관리</span>합니다</h1>
+        <p class="lead">Plugin으로 기획하고 Studio로 확인·검증하는 실무 흐름을 설명합니다.</p>
+        <div class="flow" aria-label="기획자 기본 루프">
+          <div class="node"><strong>1 · 코치와 작성</strong><span>Plugin이 문서와 화면설계를 만들고 고친다</span></div>
+          <div class="arrow" aria-hidden="true">→</div>
+          <div class="node"><strong>2 · Studio로 확인</strong><span>진행·연결·누락·버전을 실제 파일로 확인한다</span></div>
+          <div class="arrow" aria-hidden="true">→</div>
+          <div class="node"><strong>3 · 검증 후 인계</strong><span>문제를 검증하고 ✦ 버튼으로 코치에게 넘긴다</span></div>
+        </div>
+        <div class="statement">기억할 역할은 간단합니다. <strong>만들고 고치는 일은 Plugin</strong>, <strong>읽고 검증하고 방향을 잡는 일은 Studio</strong>가 맡습니다.</div>
+        <section class="card" style="margin-top:24px">
+          <h3>시작 전에 확인하세요</h3>
+          <ul class="feature-list">
+            <li><b>01</b><span><strong>지원 환경</strong> · macOS 12 이상, ReleaseKit Studio 설치</span></li>
+            <li><b>02</b><span><strong>Plugin 설치</strong> · Claude에 <code>planning-kit.plugin</code>을 저장한 뒤 프로젝트 설정</span></li>
+            <li><b>03</b><span><strong>AI 검토</strong> · 프로젝트와 AI를 연결하는 Claude CLI 설치·로그인 필요</span></li>
+          </ul>
+        </section>
+      </div>
+      <footer class="cover-meta"><span>기획자 활용 가이드</span></footer>
+    </article>
+
+    <article class="page" data-page="02 / 11">
+      <p class="eyebrow">Before you begin · Install Plugin</p>
+      <h2>Claude에 planning-kit 플러그인을 먼저 설치합니다</h2>
+      <p class="lead">처음 사용할 때는 배포받은 <code>planning-kit.plugin</code> 파일을 Claude 데스크톱에 저장합니다.</p>
+      <div class="install-steps" aria-label="Releasekit Plugin 설치 순서">
+        <section><small>1</small><strong>파일 준비</strong><span>배포받은 <code>planning-kit.plugin</code> 파일을 찾습니다.</span></section>
+        <section><small>2</small><strong>Claude 열기</strong><span>Claude 데스크톱에서 Cowork 대화를 엽니다.</span></section>
+        <section><small>3</small><strong>드래그앤드롭</strong><span>플러그인 파일을 대화창에 끌어다 놓습니다.</span></section>
+        <section><small>4</small><strong>저장</strong><span>표시된 플러그인 정보를 확인하고 <b>저장</b>합니다.</span></section>
+      </div>
+      <div class="grid-2">
+        <section class="card accent"><h3>설치 확인</h3><p>Claude의 플러그인 목록에서 <strong>planning-kit</strong>이 보이는지 확인합니다.</p></section>
+        <section class="card"><h3>첫 프로젝트 시작</h3><p>새 Cowork 대화를 열고 프로젝트 폴더를 연결한 뒤 “기획 시작하자”라고 요청합니다.</p></section>
+      </div>
+      <div class="steps">
+        <section class="step"><h3>프로젝트 폴더 허용</h3><p>Claude가 폴더 접근을 요청하면 대상 경로를 확인하고 허용합니다.</p></section>
+        <section class="step"><h3>프로젝트 설정 진행</h3><p>Plugin의 질문에 답해 기본 문서와 선택 Pack을 정합니다.</p></section>
+        <section class="step"><h3>설치 결과 확인</h3><p>프로젝트에 기획 문서와 <code>.planning/kit.json</code>이 생성되면 Studio에서 열 수 있습니다.</p></section>
+      </div>
+      <div class="callout"><b>업데이트</b><p>새 버전을 받았다면 새 <code>.plugin</code> 파일로 같은 과정을 반복하고, 새 대화에서 버전을 확인하세요.</p></div>
+      <footer class="page-footer"><span>ReleaseKit Studio 1.0 · 활용 가이드</span><span>Plugin 설치</span></footer>
+    </article>
+
+    <article class="page" data-page="03 / 11">
+      <p class="eyebrow">Before you begin · AI working model</p>
+      <h2>AI 기획 도구는 대화를 <span class="marker-underline">파일 작업</span>으로 바꾸어 실행합니다</h2>
+      <p class="lead">AI 개발 도구는 프로젝트 파일을 읽고 수정합니다. 작업 전후의 파일을 확인하세요.</p>
+      <div class="operation-flow" aria-label="AI 기획 도구가 요청을 처리하는 순서">
+        <section><small>1 · REQUEST</small><strong>목적을 말합니다</strong><span>“결제 정책과 요구사항을 정리해줘”</span></section>
+        <section><small>2 · READ</small><strong>기존 파일을 읽습니다</strong><span>규칙·문서·현재 상태를 먼저 파악</span></section>
+        <section><small>3 · WRITE</small><strong>제안하고 반영합니다</strong><span>질문과 승인을 거쳐 문서를 생성·수정</span></section>
+        <section><small>4 · CHECK</small><strong>결과를 확인합니다</strong><span>변경 파일과 검사 결과를 사람이 검토</span></section>
+      </div>
+      <div class="grid-2">
+        <section class="card accent"><h3>파일이 공동 기억입니다</h3><p>결정·요구사항·다음 할 일을 파일에 남겨 다음 사람과 AI가 이어 읽게 합니다.</p></section>
+        <section class="card"><h3>Plugin은 AI의 작업 지침입니다</h3><p>AI가 Releasekit 방식으로 질문·작성·검사하도록 규칙과 절차를 더합니다.</p></section>
+        <section class="card"><h3>Studio는 확인 도구입니다</h3><p>현황과 문제를 보여줍니다. 원본 수정은 문맥과 함께 AI 코치에게 요청합니다.</p></section>
+        <section class="card signal"><h3>결정은 사람이 합니다</h3><p>AI는 초안을 만들고 검사는 구조를 봅니다. 정책과 우선순위는 사람이 확정합니다.</p></section>
+      </div>
+      <div class="callout"><b>안전 원칙</b><p>대상 폴더와 변경 파일을 확인하세요. 중요한 결정은 기억이 아닌 문서에 기록합니다.</p></div>
+      <footer class="page-footer"><span>ReleaseKit Studio 1.0 · 활용 가이드</span><span>AI 도구 이해하기</span></footer>
+    </article>
+
+    <article class="page compact-page" data-page="04 / 11">
+      <p class="eyebrow">Before you begin · Starter vocabulary</p>
+      <h2>이 가이드에서 반복해서 쓰는 말을 먼저 익혀두세요</h2>
+      <p class="lead">외울 필요는 없습니다. 낯선 약어가 나오면 이 페이지의 “쉬운 뜻”으로 바꾸어 읽으면 됩니다.</p>
+      <div class="term-grid">
+        <section><strong>프로젝트 폴더</strong><span>기획 문서·화면설계·설정·검토 기록을 함께 보관하는 작업 공간</span></section>
+        <section><strong>형상</strong><span>특정 시점의 파일 내용과 버전을 합친 “현재 기획 상태”</span></section>
+        <section><strong>Plugin / Pack</strong><span>AI의 기본 작업 규칙 / 필요할 때 추가하는 선택 기능 묶음</span></section>
+        <section><strong>Studio</strong><span>프로젝트 파일을 읽어 현황·연결·검토 결과를 보여주는 데스크톱 앱</span></section>
+        <section><strong>SSOT</strong><span>같은 사실을 여러 곳에 복사하지 않고, 고칠 원본을 한 곳으로 정하는 원칙</span></section>
+        <section><strong>Markdown(.md)</strong><span>제목·목록·표를 간단한 기호로 표현하는 읽기 쉬운 텍스트 문서</span></section>
+        <section><strong>ID</strong><span><code>REQ-014</code>처럼 문장이나 제목이 바뀌어도 항목을 추적하는 고유 번호</span></section>
+        <section><strong>로컬</strong><span>외부 웹 서비스가 아니라 내 컴퓨터와 프로젝트 폴더 안에서 처리한다는 뜻</span></section>
+        <section><strong>검사 / AI 검토</strong><span>정해진 형식의 오류 확인 / 내용의 누락·모순을 AI가 읽고 제안</span></section>
+        <section><strong>인계(핸드오프)</strong><span>다음 작업자가 바로 실행할 수 있게 근거·범위·완료 조건을 함께 전달하는 일</span></section>
+        <section><strong>기준선·동결본</strong><span>“이 버전을 기준으로 개발한다”고 합의해 이후 변경과 구분한 묶음</span></section>
+        <section><strong>Git</strong><span>파일의 변경 이력을 저장하고 이전 버전과 비교·복구하는 형상 관리 도구</span></section>
+      </div>
+      <div class="callout"><b>문서 약어</b><p><strong>PRD</strong> 목표 · <strong>POL</strong> 정책 · <strong>REQ</strong> 요구사항 · <strong>SCR</strong> 화면 · <strong>FLOW</strong> 흐름 · <strong>TC</strong> 테스트 · <strong>FEAT</strong> 기능 묶음 · <strong>IA</strong> 정보 구조 · <strong>ROADMAP</strong> 진행판 · <strong>BACKLOG</strong> 할 일</p></div>
+      <footer class="page-footer"><span>ReleaseKit Studio 1.0 · 활용 가이드</span><span>입문 용어</span></footer>
+    </article>
+
+    <article class="page" data-page="05 / 11">
+      <p class="eyebrow">Diagram 1 · Product ecosystem</p>
+      <h2>두 제품은 프로젝트 폴더를 사이에 두고 협업합니다</h2>
+      <p class="lead">Plugin이 파일을 만들고 Studio가 다시 읽습니다. 검증 결과는 다음 AI 대화에 이어집니다.</p>
+      <div class="ecosystem" aria-label="Releasekit Plugin, 프로젝트 폴더, ReleaseKit Studio의 동작 구조">
+        <section class="ecosystem-node plugin"><small>PRODUCER</small><strong>Releasekit Plugin</strong><span>AI 코치와 기획 시작</span><span>문서·화면설계 생성과 수정</span><span>Core + Packs 구성</span></section>
+        <div class="ecosystem-link"><span>쓰고 갱신</span></div>
+        <section class="ecosystem-node project"><small>SINGLE SOURCE OF TRUTH</small><strong>기획 프로젝트 폴더</strong><span>REQ · POL · SCR · FLOW · TC · FEAT</span><span>ROADMAP · BACKLOG · REVIEW</span><span>.planning/kit · status · studio-check</span></section>
+        <div class="ecosystem-link"><span>읽고 판정</span></div>
+        <section class="ecosystem-node studio"><small>CONSUMER</small><strong>ReleaseKit Studio</strong><span>진행·문서 관계·버전 표시</span><span>로컬·AI 검증 실행</span><span>다음 작업을 코치에게 인계</span></section>
+      </div>
+      <div class="ownership-strip">
+        <div><small>PLUGIN OWNS</small><strong>만들고 고칩니다</strong><span>기획 원본, 화면설계, Pack 구성</span></div>
+        <div><small>PROJECT REMEMBERS</small><strong>사실을 보존합니다</strong><span>문서, 상태, 출처, 버전과 기록</span></div>
+        <div><small>STUDIO OWNS</small><strong>읽고 검증합니다</strong><span>판정, 실행 기록, 허용된 검토 요약</span></div>
+      </div>
+      <h3 style="margin-top:24px">왜 서로 직접 연결하지 않을까요?</h3>
+      <div class="grid-2">
+        <section class="card"><h3>앱이 없어도 파일은 남습니다</h3><p>문서와 상태가 프로젝트에 남아 다음 사람과 AI가 이어 읽습니다.</p></section>
+        <section class="card accent"><h3>작성과 검증을 분리합니다</h3><p>Studio가 실제 파일을 다시 읽어 Plugin의 자기 판정을 줄입니다.</p></section>
+      </div>
+      <div class="callout"><b>한 줄 이해</b><p>Plugin은 공장, 프로젝트 폴더는 창고, Studio는 관제실입니다.</p></div>
+      <footer class="page-footer"><span>ReleaseKit Studio 1.0 · 활용 가이드</span><span>제품 동작 구조</span></footer>
+    </article>
+
+    <article class="page" data-page="06 / 11">
+      <p class="eyebrow">Diagram 2 · Daily planning loop</p>
+      <h2>실제 업무는 작성 → 감지 → 검증 → 수정의 반복입니다</h2>
+      <p>작은 단위로 작성하고 Studio에서 확인한 뒤, 문제의 문맥을 코치에게 돌려보냅니다.</p>
+      <div class="work-loop" aria-label="Plugin과 Studio를 오가는 하루 작업 흐름">
+        <div class="loop-row"><div class="loop-label">기획자 + Plugin</div><div class="loop-track"><div class="loop-event plugin wide-2"><strong>① 목적을 말합니다</strong>“결제 정책 요구사항 정리하자”</div><div class="loop-event plugin wide-2"><strong>② 질문하고 작성합니다</strong>문서·ID·상태·관계를 갱신</div></div></div>
+        <div class="loop-row"><div class="loop-label">프로젝트 폴더</div><div class="loop-track"><div class="loop-event project wide-3"><strong>③ 형상이 바뀝니다</strong>REQ·POL·ROADMAP과 코치 기록이 파일로 남음</div></div></div>
+        <div class="loop-row"><div class="loop-label">Studio</div><div class="loop-track"><div class="loop-event studio wide-2"><strong>④ 변경을 다시 읽습니다</strong>단계·관계·미결·버전 재계산</div><div class="loop-event studio wide-2"><strong>⑤ 필요한 검증을 합니다</strong>누락·연결 검사 → AI 검토</div></div></div>
+        <div class="loop-row"><div class="loop-label">판정</div><div class="loop-track"><div class="loop-event signal wide-2"><strong>문제가 있으면</strong>원문 위치와 실패 문맥 확인</div><div class="loop-event studio end"><strong>통과하면</strong>다음 단계로</div></div></div>
+        <div class="loop-row"><div class="loop-label">코치 인계</div><div class="loop-track"><div class="loop-event plugin wide-3"><strong>⑥ ✦ 요청을 넘깁니다</strong>“REQ-014 연결 문제를 고치고 다시 검사하자”</div></div></div>
+      </div>
+      <div class="loop-return">수정된 형상을 Studio가 다시 읽으며 반복</div>
+      <div class="grid-3">
+        <section class="card"><h3>작게 작성</h3><p>도메인이나 결정 하나처럼 검토 가능한 크기로 코치에게 요청합니다.</p></section>
+        <section class="card accent"><h3>싼 검사부터</h3><p>로컬 문서 검사를 먼저 통과한 뒤 넓은 AI 검토로 갑니다.</p></section>
+        <section class="card"><h3>문맥째 인계</h3><p>“고쳐줘” 대신 ID·실패 이유·원문 위치가 담긴 요청을 넘깁니다.</p></section>
+      </div>
+      <div class="statement">두 제품을 번갈아 쓰는 이유는 역할 중복이 아니라 <strong>작성한 쪽과 확인하는 쪽을 분리</strong>하기 위해서입니다.</div>
+      <footer class="page-footer"><span>ReleaseKit Studio 1.0 · 활용 가이드</span><span>반복 업무 흐름</span></footer>
+    </article>
+
+    <article class="page" data-page="07 / 11">
+      <p class="eyebrow">Step 1 · Open & orient</p>
+      <h2>프로젝트를 열고 <span class="marker-underline">지금 어디인가</span>를 먼저 봅니다</h2>
+      <div class="mini-ui" aria-label="진행 상황 화면 개념도">
+        <div class="chrome"><i></i><i></i><i></i></div>
+        <div class="body">
+          <div class="side"><b>ReleaseKit</b><span class="active">진행 상황</span><span>기획 문서</span><span>화면설계</span><span>검토 및 점검</span><span>배포</span><span>작업 로그</span></div>
+          <div class="canvas"><h3>기획의 현재 위치와 다음 할 일</h3><div class="rail"><span>서비스 정의</span><span class="current">요구사항 정리</span><span>화면·플로우</span><span>프로토타이핑</span><span>검토·전달</span></div><div class="skeleton"><i></i><i></i><i></i></div></div>
+        </div>
+      </div>
+      <div class="steps">
+        <section class="step"><h3>프로젝트 폴더 선택</h3><p>Studio는 먼저 파일을 수정하지 않고 프로젝트를 분석합니다. 최근 프로젝트가 있다면 시작 화면에서 바로 다시 열 수 있습니다.</p></section>
+        <section class="step"><h3>상단 신호부터 확인</h3><p>정합성 오류를 먼저 해결하고, 미결 결정과 다음 작업을 함께 봅니다.</p></section>
+        <section class="step"><h3>다음 할 일 하나를 실행</h3><p>✦ 버튼은 필요한 문맥과 함께 Claude의 새 대화를 엽니다.</p></section>
+        <section class="step"><h3>ROADMAP에서 근거 확인</h3><p>문서·검토·핸드오프 상태를 비교하고, 이상하면 원문을 엽니다.</p></section>
+      </div>
+      <div class="callout"><b>Tip</b><p>여러 파일을 고쳤거나 검토·배포 전이라면 다시 분석해 최신 상태를 확인하세요.</p></div>
+      <footer class="page-footer"><span>ReleaseKit Studio 1.0 · 활용 가이드</span><span>진행 상황</span></footer>
+    </article>
+
+    <article class="page" data-page="08 / 11">
+      <p class="eyebrow">Step 2 · Explore evidence</p>
+      <h2>기획 문서에서는 <span class="marker-underline">파일</span>과 <span class="marker-underline">관계</span>를 함께 봅니다</h2>
+      <p class="lead">문서를 읽는 목적은 목록을 세는 것이 아니라, 요구사항이 화면·플로우·테스트까지 제대로 이어졌는지 근거를 찾는 것입니다.</p>
+      <div class="grid-2">
+        <section class="card accent"><h3>기획 문서 탭</h3><p>문서를 유형·상태로 좁히고 ID 관계와 원문 위치를 봅니다.</p></section>
+        <section class="card"><h3>문서 파일 탭</h3><p>파일을 수정순·이름순으로 보고 미완료 항목만 모읍니다.</p></section>
+      </div>
+      <ul class="feature-list">
+        <li><b>01</b><span><strong>ID로 검색하기</strong> · `REQ-001`처럼 검색하면 제목뿐 아니라 실제 산출물 ID를 중심으로 찾습니다.</span></li>
+        <li><b>02</b><span><strong>상태로 좁히기</strong> · 초안, 검토 통과, 확정, 진행 중 등 문서가 기록한 상태를 기준으로 비교합니다.</span></li>
+        <li><b>03</b><span><strong>관계 그래프 읽기</strong> · “이 항목이 참조함 / 이 항목을 참조함”을 양쪽으로 확인해 고립된 요구사항을 찾습니다.</span></li>
+        <li><b>04</b><span><strong>원문으로 이동하기</strong> · Studio가 해석한 제목만 믿지 말고 출처 파일과 줄 번호에서 실제 문장을 확인합니다.</span></li>
+        <li><b>05</b><span><strong>빠른 검색 사용하기</strong> · ⌘K로 어느 화면에서든 문서, ID, 기능을 검색합니다.</span></li>
+      </ul>
+      <div class="do-dont">
+        <section class="do"><h3>이렇게 활용하세요</h3><ul><li>정합성 실패의 ID를 검색해 양쪽 원문 비교</li><li>검토 전 초안 상태만 모아 읽기</li><li>최근 수정된 문서의 연결이 유지됐는지 확인</li></ul></section>
+        <section class="dont"><h3>이렇게 읽지 마세요</h3><ul><li>항목 수를 진척률로 간주하기</li><li>참조 수가 많으면 품질이 높다고 판단하기</li><li>Studio의 요약만 보고 원문 확인을 생략하기</li></ul></section>
+      </div>
+      <div class="callout"><b>핵심</b><p>Studio의 숫자는 결론이 아니라 원문으로 돌아가는 지도입니다.</p></div>
+      <footer class="page-footer"><span>ReleaseKit Studio 1.0 · 활용 가이드</span><span>기획 문서</span></footer>
+    </article>
+
+    <article class="page" data-page="09 / 11">
+      <p class="eyebrow">Step 3 · Work with designs</p>
+      <h2>화면설계는 버전과 검토 결과를 한 카드에서 관리합니다</h2>
+      <p class="lead">Studio는 업무 영역별 화면설계의 작업 버전과 배포 버전을 비교합니다.</p>
+      <div class="grid-2">
+        <section class="card accent"><h3>현재 작성 중</h3><p>지금 편집되는 화면설계 파일과 버전, 수정 시각입니다. 파일 경로를 눌러 실제 HTML을 브라우저에서 확인합니다.</p></section>
+        <section class="card"><h3>최종 배포</h3><p>배포 기준선으로 남은 버전입니다. 현재 버전과 다르면 무엇이 아직 배포되지 않았는지 구분할 수 있습니다.</p></section>
+      </div>
+      <h3 style="margin-top:24px">카드에서 할 수 있는 주요 작업</h3>
+      <table class="table">
+        <thead><tr><th>기능</th><th>언제 쓰나</th><th>실제 처리 주체</th></tr></thead>
+        <tbody>
+          <tr><td><strong>PDF 파일 생성</strong></td><td>리뷰·공유용 파생본이 필요할 때</td><td>✦ AI 코치로 요청</td></tr>
+          <tr><td><strong>화면설계 점검</strong></td><td>다음 버전 전에 변경점과 영향 범위를 검토할 때</td><td>Studio에서 결과 저장, 반영은 코치</td></tr>
+          <tr><td><strong>UX 리뷰</strong></td><td>문구·흐름·상태·사용성을 읽기 전용으로 살필 때</td><td>Studio 내장 기준으로 실행</td></tr>
+          <tr><td><strong>변경 반영 및 다음 버전</strong></td><td>검토 결과를 실제 설계서에 적용할 때</td><td>✦ AI 코치로 요청</td></tr>
+          <tr><td><strong>새 도메인 만들기</strong></td><td>새 업무 영역의 화면설계를 시작할 때</td><td>✦ AI 코치로 요청</td></tr>
+        </tbody>
+      </table>
+      <div class="steps">
+        <section class="step"><h3>브라우저에서 실제 화면을 먼저 확인</h3><p>버전 표기보다 현재 파일의 화면과 흐름이 맞는지 먼저 봅니다.</p></section>
+        <section class="step"><h3>점검 또는 UX 리뷰 실행</h3><p>저장된 결과가 있으면 다시 비용을 쓰기 전에 기존 결과부터 엽니다. 관련 문서가 바뀌었다면 오래된 결과라는 신호를 확인합니다.</p></section>
+        <section class="step"><h3>결과를 근거로 코치에게 반영 요청</h3><p>Studio는 원본을 대신 수정하지 않습니다. “변경 반영 및 다음 버전”으로 작업 문맥을 코치에게 넘깁니다.</p></section>
+      </div>
+      <div class="callout"><b>주의</b><p>화면설계 삭제 전 대상 파일과 복구 가능 여부를 확인하세요.</p></div>
+      <footer class="page-footer"><span>ReleaseKit Studio 1.0 · 활용 가이드</span><span>화면설계</span></footer>
+    </article>
+
+    <article class="page" data-page="10 / 11">
+      <p class="eyebrow">Step 4 · Verify with intent</p>
+      <h2>검토 및 점검은 다섯 가지가 서로 다른 질문을 합니다</h2>
+      <p>로컬 검사부터 실행하고, 근거를 확인한 뒤 AI 검토로 넓히세요.</p>
+      <table class="table">
+        <thead><tr><th>검증</th><th>확인하는 것</th><th>AI / 기록</th></tr></thead>
+        <tbody>
+          <tr><td><strong>문서 누락·연결 검사</strong></td><td>빠진 정의, ID 불일치, 연결되지 않은 문서</td><td>로컬 · 원본 변경 없음</td></tr>
+          <tr><td><strong>AI 판정 근거 확인</strong></td><td>자동 검사 결과의 통과 근거가 충분한지</td><td>AI 전송 · 원본 변경 없음</td></tr>
+          <tr><td><strong>마감 전 전체 검토</strong></td><td>문서 전체의 누락과 모순</td><td>AI · `docs/REVIEW.md` 기록</td></tr>
+          <tr><td><strong>반복 교차 검증</strong></td><td>지적과 수정을 반복해 남은 문제 축소</td><td>AI · `docs/REVIEW.md` 기록</td></tr>
+          <tr><td><strong>화면 사용성 검토</strong></td><td>화면 문구와 사용 흐름</td><td>AI · `docs/UX-REVIEW.md` 기록</td></tr>
+        </tbody>
+      </table>
+      <div class="grid-2">
+        <section class="card accent"><h3>로컬 검사는 바로 실행</h3><p>파일을 바꾸거나 AI에 보내지 않습니다. 결과의 ID와 원문을 확인하세요.</p></section>
+        <section class="card signal"><h3>AI 검토는 범위 확인</h3><p>전송 범위·쓰기 대상·제외 항목을 읽고 승인합니다.</p></section>
+      </div>
+      <div class="steps">
+        <section class="step"><h3>문서 누락·연결 검사부터 실행</h3><p>실패가 있으면 다른 검토 전에 고칩니다. 깨진 문서를 넓게 리뷰하면 결과도 다시 써야 합니다.</p></section>
+        <section class="step"><h3>실패 근거를 원문에서 확인</h3><p>발견 항목을 눌러 정확한 줄로 이동합니다. 필요하면 ✦ 버튼으로 항목 문맥을 코치에게 넘깁니다.</p></section>
+        <section class="step"><h3>마감 단계에 AI 검토 확장</h3><p>전송 범위와 기록 파일을 확인하고 전체 검토 또는 교차 검증을 실행합니다.</p></section>
+      </div>
+      <div class="callout"><b>안전장치</b><p>Studio가 쓸 수 있는 곳은 검토 기록 두 파일과 상태 요약 한 파일뿐입니다. 범위를 벗어나면 실패·복구 처리합니다.</p></div>
+      <footer class="page-footer"><span>ReleaseKit Studio 1.0 · 활용 가이드</span><span>검토 및 점검</span></footer>
+    </article>
+
+    <article class="page" data-page="11 / 11">
+      <p class="eyebrow">Step 5 · Package & remember</p>
+      <h2>배포에서는 묶고, 작업 로그에서는 되짚습니다</h2>
+      <div class="grid-2">
+        <section class="card accent">
+          <h3>배포 · 현재 형상 정리</h3>
+          <p>문서·화면설계·PDF를 버전별로 묶습니다. 원본과 Git 태그는 바꾸지 않습니다.</p>
+        </section>
+        <section class="card">
+          <h3>작업 로그 · 흐름 복기</h3>
+          <p>문서 변경과 실행 결과를 함께 보고, 무엇이 언제 달라졌는지 확인합니다.</p>
+        </section>
+      </div>
+      <h3 style="margin-top:25px">기획자가 반복해서 쓰는 추천 루틴</h3>
+      <div class="rail" aria-label="추천 업무 루틴">
+        <span class="current">다시 분석</span><span>신호 확인</span><span>원문 탐색</span><span>검토 실행</span><span>코치 인계</span>
+      </div>
+      <div class="steps">
+        <section class="step"><h3>업무를 시작할 때</h3><p>프로젝트를 다시 분석하고 진행 상황의 상단 신호와 다음 할 일 하나를 확인합니다.</p></section>
+        <section class="step"><h3>문서를 고친 뒤</h3><p>기획 문서에서 ID 관계를 확인하고 문서 누락·연결 검사를 다시 실행합니다.</p></section>
+        <section class="step"><h3>화면 버전을 올리기 전</h3><p>브라우저 실물을 확인하고 점검 또는 UX 리뷰 결과를 근거로 코치에게 반영을 요청합니다.</p></section>
+        <section class="step"><h3>마감·인계 전</h3><p>ROADMAP, 검토 및 점검, 배포 화면을 차례로 확인하고 관련 파일을 버전 묶음으로 정리합니다.</p></section>
+        <section class="step"><h3>문제가 생겼을 때</h3><p>실행 결과와 변경 목록을 확인하고, 충돌이 없을 때 해당 실행만 되돌립니다.</p></section>
+      </div>
+      <div class="statement">Studio를 잘 쓰는 기준은 화면을 많이 여는 것이 아닙니다. <strong>근거를 보고 → 필요한 검증만 하고 → 수정할 문맥을 잃지 않은 채 코치에게 넘기는 것</strong>입니다.</div>
+      <p class="note" style="margin-top:18px">기준: Studio 1.0.0 · Plugin 1.0.0 · 2026-08-30 작업본</p>
+      <footer class="page-footer"><span>ReleaseKit Studio 1.0 · 활용 가이드</span><span>배포 · 작업 로그</span></footer>
+    </article>
+  </main>
+</body>
+</html>

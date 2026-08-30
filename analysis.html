@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ReleaseKit Studio 1.0 형상 분석</title>
+  <meta name="description" content="ReleaseKit Studio 1.0의 제품 경계, 핵심 구조와 설계 원칙 분석">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <header class="site-bar">
+    <strong><a href="./index.html" style="text-decoration:none">ReleaseKit Studio</a></strong>
+    <nav aria-label="문서"><a href="./analysis.html" aria-current="page">Studio 분석</a><a href="./plugin-analysis.html">Plugin 분석</a><a href="./guide.html">Studio&amp;Plugin 활용 가이드</a><a href="./version-control-guide.html">형상관리 가이드</a></nav>
+  </header>
+  <main class="document">
+    <article class="page cover" data-page="01 / 02">
+      <div>
+        <p class="eyebrow">Product overview · Version 1.0</p>
+        <h1>Plugin으로 기획한 프로젝트 진행상황을<br><span class="marker-underline">모니터링</span>하고 <span class="marker-underline">검증</span>하는 앱</h1>
+        <p class="lead">프로젝트 단위의 기획 문서의 진행 단계, 문서 간 연결, 누락과 오류를 모니터링할 수 있도록 화면으로 보여준다.</p>
+        <div class="statement">문서는 Plugin에서 만들고 수정한다. Studio는 결과를 읽고 점검하며, 수정이 필요하면 점검 결과와 다음 작업을 AI 코치에 전달한다.</div>
+        <div class="flow" aria-label="Releasekit 작업 흐름">
+          <div class="node"><strong>Releasekit Plugin</strong><span>기획 문서와 화면설계 생성·수정</span></div>
+          <div class="arrow" aria-hidden="true">→</div>
+          <div class="node"><strong>ReleaseKit Studio</strong><span>프로젝트 열기 · 진행 확인 · 연결과 오류 점검</span></div>
+          <div class="arrow" aria-hidden="true">→</div>
+          <div class="node"><strong>AI 코치에 요청 전달</strong><span>점검 결과 확인 · 다음 수정 작업 실행</span></div>
+        </div>
+      </div>
+      <footer class="cover-meta"><span>분석 기준 · ReleaseKit Studio 1.0.0</span><span>2026. 08. 30</span></footer>
+    </article>
+
+    <article class="page" data-page="02 / 02">
+      <p class="eyebrow">Reading the product</p>
+      <h2>1.0을 설명하는 네 가지 문장</h2>
+      <div class="grid-2">
+        <section class="card accent">
+          <h3>① 화면은 파일보다 “다음 판단”에 가깝다</h3>
+          <p>9단계를 다음 행동이 달라지는 다섯 구간으로 묶는다. 퍼센트 대신 현재 단계와 근거를 보여주고, 오류와 미결 결정을 먼저 알린다.</p>
+        </section>
+        <section class="card">
+          <h3>② 같은 원본을 여섯 관점으로 읽는다</h3>
+          <p>여섯 화면은 데이터 분류가 아니라 실제 업무 순서를 따른다. 모두 같은 프로젝트 파일을 다른 관점으로 읽는다.</p>
+        </section>
+        <section class="card">
+          <h3>③ 추정하지 않는 것이 기능이다</h3>
+          <p>문서 ID·출처·참조·버전만 근거로 삼는다. 근거가 없으면 추정하지 않고 “측정할 수 없음”으로 표시한다.</p>
+        </section>
+        <section class="card signal">
+          <h3>④ 안전은 확인창이 아니라 경계로 만든다</h3>
+          <p>화면의 파일 접근을 막고 실행 작업을 고정한다. 자동 검증의 쓰기 대상도 세 파일로 제한하며, 이탈한 변경은 실패·복구 처리한다.</p>
+        </section>
+      </div>
+
+      <h2 style="margin-top:24px">제품 형상의 강점과 남은 질문</h2>
+      <table class="table">
+        <thead><tr><th>관점</th><th>1.0에서 확보한 것</th><th>다음에 풀어야 할 것</th></tr></thead>
+        <tbody>
+          <tr><td><strong>제품 경계</strong></td><td>Plugin은 생산자, Studio는 소비자. 두 제품을 독립 버전으로 운영</td><td>Plugin 릴리스마다 입력 계약 영향 판정을 지속</td></tr>
+          <tr><td><strong>기획자 경험</strong></td><td>상태 확인 → 근거 탐색 → 검증 → 코치 인계의 닫힌 루프</td><td>같은 UX 리뷰가 화면설계와 품질에 겹쳐 보이는 문제 정리</td></tr>
+          <tr><td><strong>협업 확장</strong></td><td>도메인·버전별 화면설계와 로컬 버전 묶음</td><td>개발자가 받는 핸드오프 단위와 전달 상태를 제품화</td></tr>
+          <tr><td><strong>신뢰</strong></td><td>내 컴퓨터에서의 분석, 실행 내용 식별값, 변경 감시, 실행별 복구 기록</td><td>Studio 버튼으로 AI 코치의 특정 작업을 여는 연결(딥링크)에서 요청 문구가 유실되지 않는지 지속 검증</td></tr>
+        </tbody>
+      </table>
+
+      <div class="statement">ReleaseKit Studio 1.0은 “AI가 기획을 대신한다”는 제품이 아니다. 사람이 만든 근거를 잃지 않은 채, AI와 일하는 기획 과정이 끊어지지 않게 만드는 제품이다.</div>
+      <p class="note">근거: Studio 1.0.0 구현·결정·호환성 문서, 2026-08-28 작업 기록, Plugin 교차 검증</p>
+      <footer class="page-footer"><span>ReleaseKit Studio 1.0 · 형상 분석</span><span>Local-first planning cockpit</span></footer>
+    </article>
+
+  </main>
+</body>
+</html>

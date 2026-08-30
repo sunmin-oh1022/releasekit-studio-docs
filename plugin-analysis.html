@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Releasekit Plugin 1.0 형상 분석</title>
+  <meta name="description" content="Releasekit Plugin 1.0의 형상 생성 구조, Core + Packs와 제품 계약 분석">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <header class="site-bar">
+    <strong><a href="./index.html" style="text-decoration:none">ReleaseKit Studio</a></strong>
+    <nav aria-label="문서"><a href="./analysis.html">Studio 분석</a><a href="./plugin-analysis.html" aria-current="page">Plugin 분석</a><a href="./guide.html">Studio&amp;Plugin 활용 가이드</a><a href="./version-control-guide.html">형상관리 가이드</a></nav>
+  </header>
+  <main class="document">
+    <article class="page cover" data-page="01 / 08">
+      <div>
+        <p class="eyebrow">Product shape analysis · Version 1.0</p>
+        <h1>대화로 구체화한 기획을<br><span class="marker-underline">프로젝트 형상</span>으로 남기는 도구</h1>
+        <p class="lead">Plugin 1.0은 AI 대화를 규칙·문서·검증 수단으로 전환해 프로젝트 형상으로 남기는 기획 도구입니다.</p>
+        <div class="statement">Plugin 1.0의 제품 가치는 “AI가 문서를 써준다”가 아니라, AI와 함께한 기획을 다음 사람이 다시 읽을 수 있는 형상으로 만든다는 데 있다.</div>
+        <div class="flow" aria-label="Releasekit Plugin 작업 흐름">
+          <div class="node"><strong>AI 코치와 대화</strong><span>의도 확인 · 질문 · 다음 작업 안내</span></div>
+          <div class="arrow" aria-hidden="true">→</div>
+          <div class="node"><strong>Releasekit Plugin</strong><span>공통 Core(기본 규칙) · 선택 Packs(기능 묶음) · 기획 스킬</span></div>
+          <div class="arrow" aria-hidden="true">→</div>
+          <div class="node"><strong>프로젝트 형상</strong><span>특정 시점의 문서 · 상태 · 관계 · 버전 기록</span></div>
+        </div>
+      </div>
+      <footer class="cover-meta"><span>분석 기준 · Releasekit Plugin 1.0.0</span><span>2026. 08. 30</span></footer>
+    </article>
+
+    <article class="page compact-page" data-page="02 / 08">
+      <p class="eyebrow">Reading the producer</p>
+      <h2>Plugin 1.0을 설명하는 네 가지 문장</h2>
+      <div class="grid-2">
+        <section class="card accent"><h3>① 대화가 진입점이다</h3><p>기획자는 목적을 말하고, Plugin의 스킬은 필요한 문맥을 읽어 질문·작성·검토 순서를 안내한다.</p></section>
+        <section class="card"><h3>② 파일이 기억이다</h3><p>대화에서 정한 내용은 문서, ROADMAP, 검토 기록과 `.planning` 계약 파일에 남아 다음 세션의 근거가 된다.</p></section>
+        <section class="card"><h3>③ Core와 Packs로 범위를 고른다</h3><p>Core는 공통 뼈대, Pack은 선택 기능이다. 필요한 Pack만 조합한다.</p></section>
+        <section class="card signal"><h3>④ Studio를 직접 제어하지 않는다</h3><p>Plugin은 약속된 프로젝트 파일을 쓰고, Studio는 그 결과를 독립적으로 다시 읽어 판정한다.</p></section>
+      </div>
+
+      <h2 style="margin-top:24px">1.0에서 확정된 출력 계약</h2>
+      <div class="contract-stack" aria-label="Plugin과 Studio 사이의 주요 계약">
+        <div class="contract-row"><strong>kit.json</strong><span>설치된 킷 버전과 선택 Pack을 기록하는 구성 사실</span><em>Plugin → Studio</em></div>
+        <div class="contract-row"><strong>status.json</strong><span>코치가 남긴 현재 브리핑과 다음 행동 문맥</span><em>Coach → Studio</em></div>
+        <div class="contract-row"><strong>문서 모델</strong><span>REQ·POL·SCR·FLOW·TC·FEAT의 ID, 상태와 구조</span><em>Plugin → Project</em></div>
+        <div class="contract-row"><strong>검증 계약</strong><span>결과 판정과 REVIEW·UX-REVIEW 기록 위치</span><em>Plugin ↔ Studio</em></div>
+        <div class="contract-row"><strong>studio-check</strong><span>Studio 검증 요약을 다음 코치 세션에 전달</span><em>Studio → Coach</em></div>
+      </div>
+
+      <div class="grid-3">
+        <section class="card"><h3>독립 버전</h3><p>Plugin과 Studio는 각자 버전업한다.</p></section>
+        <section class="card accent"><h3>매 릴리스 판정</h3><p>계약 영향 등급과 근거를 반드시 기록한다.</p></section>
+        <section class="card"><h3>실물 교차 검증</h3><p>최종 설치 파일의 해시(내용이 같으면 같은 값이 나오는 디지털 지문)와 실제 프로젝트 흐름을 확인한다.</p></section>
+      </div>
+      <div class="statement">Plugin 1.0은 제품명과 계약 문서를 확정했지만 기술 식별자 `planning-kit`과 0.8 계열 프로젝트 데이터 계약을 유지했다. 최종 설치본은 ReleaseKit Studio 1.0.0과 호환된다.</div>
+      <footer class="page-footer"><span>Releasekit Plugin 1.0 · 형상 분석</span><span>Producer · Core + Packs</span></footer>
+    </article>
+
+    <article class="page" data-page="03 / 08">
+      <p class="eyebrow">Topic 1 · Single source of truth</p>
+      <h2>SSOT 문서는 <span class="marker-underline">모든 내용을 한 파일에 모은 문서</span>가 아닙니다</h2>
+      <p class="lead">SSOT는 같은 사실을 여러 곳에 복사하지 않고, 수정할 원본을 하나로 정하는 원칙입니다.</p>
+      <div class="statement">Releasekit의 SSOT는 하나의 거대한 문서가 아니라, <strong>역할별 원본 문서가 ID로 연결된 기획 시스템</strong>입니다.</div>
+      <div class="truth-map" aria-label="SSOT 원본과 파생 문서의 관계">
+        <section class="truth-node"><small>WHY &amp; RULE</small><strong>의도와 정책</strong><span>PRD · POL · DECISIONS</span><span>왜 만드는가, 어떤 규칙인가</span></section>
+        <div class="truth-arrow" aria-hidden="true">→</div>
+        <section class="truth-node primary"><small>AUTHORITATIVE SOURCES</small><strong>행동과 경험의 원본</strong><span>REQ · SCR · FLOW · TC</span><span>ID·상태·출처로 서로 연결</span></section>
+        <div class="truth-arrow" aria-hidden="true">→</div>
+        <section class="truth-node derived"><small>DERIVED VIEW</small><strong>개발용 기능 목록</strong><span>FEAT는 원본을 다시 정의하지 않음</span><span>REQ·POL·SCR·DEC·TC를 참조</span></section>
+      </div>
+      <h3>문서마다 소유하는 사실이 다릅니다</h3>
+      <table class="table">
+        <thead><tr><th>원본</th><th>권위 있게 정의하는 것</th><th>다른 문서가 사용하는 방식</th></tr></thead>
+        <tbody>
+          <tr><td><strong>PRD</strong></td><td>문제, 사용자, 목표와 제품 범위</td><td>요구사항과 우선순위의 판단 근거</td></tr>
+          <tr><td><strong>POL</strong></td><td>비즈니스 규칙, 조건과 예외</td><td>REQ·화면·테스트가 정책 ID 참조</td></tr>
+          <tr><td><strong>REQ</strong></td><td>시스템이 제공해야 할 행동</td><td>SCR·FLOW·TC·FEAT가 요구사항 ID 참조</td></tr>
+          <tr><td><strong>SCR / FLOW</strong></td><td>화면 상태와 사용자 이동</td><td>요구사항을 실제 경험으로 구체화</td></tr>
+          <tr><td><strong>TC</strong></td><td>완료를 확인하는 검증 기준</td><td>REQ가 구현됐는지 재현 가능한 조건 제공</td></tr>
+        </tbody>
+      </table>
+      <div class="grid-2">
+        <section class="card accent"><h3>원본이 바뀌면</h3><p>참조 문서를 찾아 영향 범위를 확인하고 파생 문서를 다시 생성·검토합니다.</p></section>
+        <section class="card"><h3>기록과 실측이 다르면</h3><p>실제 원본 파일이 이깁니다. 이전 기록은 차이를 설명하는 보조 근거로 남습니다.</p></section>
+      </div>
+      <div class="callout"><b>구분</b><p><code>FEAT</code>는 개발 범위를 묶은 파생 문서입니다. 내용을 복사하지 않고 원본 ID와 버전을 가리킵니다.</p></div>
+      <footer class="page-footer"><span>Releasekit Plugin 1.0 · 산출물</span><span>SSOT 문서</span></footer>
+    </article>
+
+    <article class="page" data-page="04 / 08">
+      <p class="eyebrow">Topic 2 · Why Markdown works</p>
+      <h2>Markdown이 작동하는 이유는 <span class="marker-underline">가벼워서</span>가 아니라 <span class="marker-underline">구조를 공유해서</span>입니다</h2>
+      <p class="lead">Markdown은 문장과 구조를 함께 담는 텍스트 형식입니다. 사람·AI·검사기·Git이 같은 원본을 읽을 수 있습니다.</p>
+      <div class="md-anatomy">
+        <div class="md-sample" aria-label="구조화된 Markdown 예시"><b>## REQ-AUTH-014</b>
+상태: reviewed
+정책: POL-AUTH-003
+
+사용자는 만료된 인증을
+다시 갱신할 수 있어야 한다.
+
+| 예외 | 기대 결과 |
+| 오프라인 | 재시도 안내 |
+
+검증: TC-AUTH-021</div>
+        <div class="md-reasons">
+          <div><strong>사람이 바로 읽습니다</strong><span>별도 편집기나 데이터베이스가 없어도 리뷰 가능</span></div>
+          <div><strong>AI가 문맥으로 읽습니다</strong><span>제목·표·목록·ID가 의미 있는 경계가 됨</span></div>
+          <div><strong>스크립트가 판정합니다</strong><span>ID, 상태, 참조와 필수 절을 결정적으로 검사</span></div>
+          <div><strong>Git이 변화를 기록합니다</strong><span>이전 버전과의 차이(diff)를 줄 단위로 비교·검토·복구</span></div>
+        </div>
+      </div>
+      <h3>Markdown을 <span class="marker-underline">작동하는 문서</span>로 만드는 네 가지 규약</h3>
+      <ul class="feature-list">
+        <li><b>01</b><span><strong>안정적인 ID</strong> · 제목이 바뀌어도 REQ·POL·SCR·FLOW·TC 식별자는 유지합니다.</span></li>
+        <li><b>02</b><span><strong>명시적인 상태</strong> · <code>draft → reviewed → approved → implementing → done</code> 순서로 관리합니다.</span></li>
+        <li><b>03</b><span><strong>정해진 구조</strong> · 헤더·표·체크박스·참조 열의 위치와 의미를 프로젝트 규칙으로 고정합니다.</span></li>
+        <li><b>04</b><span><strong>출처 연결</strong> · 같은 사실을 복사하지 않고 원본 ID와 파일·줄을 따라가도록 만듭니다.</span></li>
+      </ul>
+      <div class="grid-3">
+        <section class="card"><h3>Studio</h3><p>표·헤더·파일의 ID를 합치고 출처와 줄 번호를 보존합니다.</p></section>
+        <section class="card accent"><h3>check-docs</h3><p>누락·중복·끊긴 연결과 상태 규칙을 자동 검사합니다.</p></section>
+        <section class="card"><h3>Git</h3><p>파일 변경 이력을 저장하는 도구입니다. 누가 어느 문장을 바꿨는지 비교하고 이전 상태로 돌아갈 수 있습니다.</p></section>
+      </div>
+      <div class="callout"><b>한계</b><p><code>.md</code> 파일이 곧 SSOT는 아닙니다. ID·상태·참조·작성 주체가 합의돼야 합니다.</p></div>
+      <footer class="page-footer"><span>Releasekit Plugin 1.0 · 산출물</span><span>Markdown SSOT</span></footer>
+    </article>
+
+    <article class="page" data-page="05 / 08">
+      <p class="eyebrow">Topic 3 · Rules, skills & scripts</p>
+      <h2>Plugin은 규칙을 읽고, 스킬로 판단하고, 스크립트로 확인합니다</h2>
+      <p class="lead">Rules는 기준, Skills는 대화형 절차, Scripts는 반복 가능한 자동 작업입니다.</p>
+      <div class="operation-flow" aria-label="Plugin 실행 흐름">
+        <section><small>REQUEST</small><strong>기획자가 목적을 말함</strong><span>“결제 요구사항을 정리하자”</span></section>
+        <section><small>SKILL</small><strong>작업 절차를 선택</strong><span>질문·읽기·작성·승인 순서 결정</span></section>
+        <section><small>RULES</small><strong>프로젝트 규약 적용</strong><span>ID·상태·문서 경계·완료 조건 준수</span></section>
+        <section><small>SCRIPT</small><strong>결과를 기계 검증</strong><span>누락·연결·형식·빌드 결과 판정</span></section>
+      </div>
+      <div class="grid-3">
+        <section class="card accent"><h3>Rules · 선언</h3><p>“무엇이 올바른가”를 정의합니다. 문서 모델, ID 규칙, 상태 전이, 파일의 쓰기 주체와 검토 조건이 여기에 속합니다.</p></section>
+        <section class="card"><h3>Skills · 절차</h3><p>질문과 판단이 필요한 작성·분석·검토 순서를 정합니다.</p></section>
+        <section class="card"><h3>Scripts · 판정</h3><p>문서 검사·PDF 생성처럼 결과가 명확한 작업을 반복 실행합니다.</p></section>
+      </div>
+      <h3 style="margin-top:24px">판단과 자동화의 경계</h3>
+      <table class="table">
+        <thead><tr><th>질문</th><th>담당</th><th>이유</th></tr></thead>
+        <tbody>
+          <tr><td>이 요구사항의 의도가 충분한가?</td><td><strong>사람 + Skill</strong></td><td>맥락·우선순위·선택이 필요</td></tr>
+          <tr><td>REQ ID가 중복됐는가?</td><td><strong>Script</strong></td><td>같은 입력이면 답이 항상 같음</td></tr>
+          <tr><td>초안에서 검토 통과로 언제 바뀌나?</td><td><strong>Rule</strong></td><td>팀이 합의한 상태 전이 기준</td></tr>
+          <tr><td>검토 결과를 원본에 반영할까?</td><td><strong>사람 승인 + Skill</strong></td><td>제품 의미를 바꾸는 쓰기 작업</td></tr>
+        </tbody>
+      </table>
+      <section class="checker-explainer">
+        <h3>문서 자동 검사기(check-docs)란?</h3>
+        <p>내용의 품질이 아니라 ID·상태·필수 항목·참조 규칙을 자동 확인하는 Script입니다.</p>
+        <div class="checker-chain" aria-label="문서 작성부터 최종 승인까지의 검증 순서">
+          <span><b>① 자동 검사기</b>누락·중복·끊긴 연결·형식 확인</span><i aria-hidden="true">→</i>
+          <span><b>② AI 검토</b>내용의 모순·근거·사용성 판단</span><i aria-hidden="true">→</i>
+          <span><b>③ 사람 승인</b>제품 결정과 우선순위 확정</span>
+        </div>
+        <small>검사기의 <span class="marker-underline">통과</span>는 기획 품질의 최종 합격이 아니라, AI 검토와 사람 판단을 시작할 최소 구조가 갖춰졌다는 뜻입니다.</small>
+      </section>
+      <div class="callout"><b>Hooks</b><p>저장·검토·배포 시점에 Script나 알림을 자동 실행하는 선택 기능입니다.</p></div>
+      <footer class="page-footer"><span>Releasekit Plugin 1.0 · 작동 방식</span><span>Rules · Skills · Scripts</span></footer>
+    </article>
+
+    <article class="page compact-page" data-page="06 / 08">
+      <p class="eyebrow">Topic 4 · Development handoff</p>
+      <h2>개발 핸드오프는 <span class="marker-underline">문서 더미</span>가 아니라 기준 시점이 고정된 실행 계약이어야 합니다</h2>
+      <p class="lead">핸드오프에는 구현 범위·규칙·완료 조건과 기준 버전이 연결돼야 합니다.</p>
+      <div class="handoff-bundle">
+        <section><small>HUMAN-READABLE SSOT</small><strong>기획 원본</strong><span>PRD · POL · REQ · SCR · FLOW · TC</span><span>INDEX · 용어·라벨 사전 · IA · 일정 · 결정</span></section>
+        <section><small>EXPERIENCE BASELINE</small><strong>화면 형상</strong><span>동결된 화면설계서</span><span>실행 가능한 프로토타입</span><span>도메인과 버전이 일치해야 함</span></section>
+        <section><small>DELIVERY VIEW</small><strong>개발 실행 정보</strong><span>FEAT 기능 범위와 원본 ID</span><span>GWT(주어진 조건·행동·결과) 테스트 기준</span><span>권장: 파일 목록·버전·해시를 적은 인계 명세(manifest)</span></section>
+      </div>
+      <h3>필수 기준선과 파생 전달물은 서로 다른 질문에 답합니다</h3>
+      <table class="table">
+        <thead><tr><th>묶음</th><th>대표 산출물</th><th>개발자가 얻는 답</th></tr></thead>
+        <tbody>
+          <tr><td><strong>제품·규칙</strong></td><td>PRD, POL, 용어·라벨 사전, 결정</td><td>왜 만들며 어떤 규칙과 언어를 쓰는가</td></tr>
+          <tr><td><strong>행동·구조</strong></td><td>REQ, INDEX, IA, SCR, FLOW</td><td>무엇을 어디에서 어떤 순서로 구현하는가</td></tr>
+          <tr><td><strong>경험 기준</strong></td><td>동결 화면설계서, 동작 프로토타입</td><td>어떤 상태와 상호작용이 정답인가</td></tr>
+          <tr><td><strong>검증·일정</strong></td><td>TC, 일정</td><td>언제 무엇으로 완료를 증명하는가</td></tr>
+          <tr><td><strong>범위 요약</strong></td><td>FEAT · 파생 전달물</td><td>어느 원본과 화면 버전을 기준으로 무엇을 구현하는가</td></tr>
+        </tbody>
+      </table>
+      <h3 style="margin-top:22px">왜 형상 관리가 필요한가</h3>
+      <div class="version-line" aria-label="기획 형상 관리 흐름">
+        <div><strong>작성 중</strong>live 문서·설계 수정</div>
+        <div><strong>검토 통과</strong>ID 연결과 미결 확인</div>
+        <div><strong>v1.0 동결</strong>인계 기준선과 해시 기록</div>
+        <div><strong>v1.1 변경</strong>차이와 영향 범위 추적</div>
+      </div>
+      <div class="grid-2">
+        <section class="card accent"><h3>시간의 모호함을 없앱니다</h3><p>FEAT가 어느 화면설계 버전을 기준으로 했는지, 개발자가 받은 뒤 무엇이 바뀌었는지 구분할 수 있습니다.</p></section>
+        <section class="card"><h3>기준 이탈을 찾을 수 있습니다</h3><p>동결본의 파일 해시와 현재 원본을 비교해, 개발이 변경된 명세를 놓쳤는지 또는 명세에 없는 내용을 구현했는지 판정할 근거가 생깁니다.</p></section>
+      </div>
+      <div class="callout"><b>권장 통과 조건</b><p>문서 검사 통과, 요구사항 승인, 중요 미결 0건을 확인한 뒤 <strong>업무 영역 × 버전</strong>으로 동결합니다. PDF는 공유용 사본으로만 씁니다.</p></div>
+      <footer class="page-footer"><span>Releasekit Plugin 1.0 · 개발 인계</span><span>Domain × Version baseline</span></footer>
+    </article>
+
+    <article class="page compact-page" data-page="07 / 08">
+      <p class="eyebrow">Topic 5 · Design-to-development handoff</p>
+      <h2>개발에는 문서가 아니라 <span class="marker-underline">결정·경험·검증이 연결된 묶음</span>을 전달합니다</h2>
+      <p class="lead">핸드오프 문서는 결정·구현·검증을 연결해 개발자의 추측을 줄여야 합니다.</p>
+      <table class="table">
+        <thead><tr><th>전달 문서</th><th>개발에서 하는 역할</th><th>디자인이 개입하는 지점</th></tr></thead>
+        <tbody>
+          <tr><td><strong>PRD · POL · DECISIONS</strong></td><td>범위, 비즈니스 규칙, 예외와 선택의 근거</td><td>정책을 화면 상태·문구·금지 행동으로 번역</td></tr>
+          <tr><td><strong>REQ · INDEX</strong></td><td>구현 단위, 우선순위, API·상태 모델과 추적 ID</td><td>요구사항이 실제 화면과 사용자 행동으로 성립하는지 확인</td></tr>
+          <tr><td><strong>IA · SCR · FLOW</strong></td><td>화면 구조, 이동, 분기와 예외 흐름</td><td>정보 위계·탐색·상태 전환과 접근성 설계</td></tr>
+          <tr><td><strong>Designspec · Prototype</strong></td><td>컴포넌트, 반응형 규칙, 상호작용의 구현 기준선</td><td>기본·로딩·빈·오류·권한 상태와 시각 토큰을 동결</td></tr>
+          <tr><td><strong>TC · UX review</strong></td><td>기능 완료 조건, 회귀 테스트와 인수 기준</td><td>사용성 기준과 디자인 QA 항목을 검증 조건에 반영</td></tr>
+          <tr><td><strong>FEAT · 일정</strong></td><td>개발 범위 합의, 산정·WBS·스프린트 분해</td><td>FEAT의 기준 화면 버전과 미결 디자인 범위를 확인</td></tr>
+          <tr><td><strong>용어·라벨 사전</strong></td><td>코드·화면·분석 이벤트의 이름을 일관되게 사용</td><td>콘텐츠 디자인과 컴포넌트 문구의 단일 기준 제공</td></tr>
+        </tbody>
+      </table>
+
+      <h3 style="margin-top:22px">디자인은 핸드오프 전후 세 번 개입합니다</h3>
+      <div class="grid-3">
+        <section class="card"><h3>① 구조 설계</h3><p>IA와 FLOW 단계에서 정보 위계, 주요 여정과 정책 예외가 사용자 경험으로 성립하는지 기획과 함께 결정합니다.</p></section>
+        <section class="card accent"><h3>② 경험 기준선 동결</h3><p>Designspec과 Prototype에 모든 상태·상호작용·반응형·접근성·토큰을 기록하고 도메인 × 버전으로 동결합니다.</p></section>
+        <section class="card"><h3>③ 구현 검증</h3><p>개발 결과를 TC와 동결본에 대조해 기능·사용성·시각 차이를 찾고, 변경이 필요하면 새 버전으로 되돌려 보냅니다.</p></section>
+      </div>
+
+      <div class="operation-flow" aria-label="기획, 디자인, 개발, 검증으로 이어지는 핸드오프 흐름">
+        <section><small>PLANNING</small><strong>SSOT 확정</strong><span>범위·정책·요구사항·결정 승인</span></section>
+        <section><small>DESIGN</small><strong>경험 기준선</strong><span>화면·흐름·상태·프로토타입 동결</span></section>
+        <section><small>DEVELOPMENT</small><strong>구현과 추적</strong><span>REQ·FEAT ID 기준 코드·테스트 연결</span></section>
+        <section><small>QA &amp; REVIEW</small><strong>기능·디자인 검증</strong><span>TC·UX review·동결본과 결과 대조</span></section>
+      </div>
+
+      <div class="statement">디자인은 기획이 끝난 뒤 화면을 꾸미는 후속 단계가 아닙니다. <strong>정책과 요구사항을 경험으로 번역하고, 개발이 따라야 할 시각·행동 기준선을 만들며, 구현 결과의 차이를 다시 판단하는 공동 소유자</strong>입니다.</div>
+      <div class="callout"><b>변경 원칙</b><p>핸드오프 뒤 디자인이 바뀌면 새 버전을 만들고, 관련 문서의 영향 범위를 기록합니다.</p></div>
+      <footer class="page-footer"><span>Releasekit Plugin 1.0 · 개발 인계</span><span>Planning × Design × Development</span></footer>
+    </article>
+
+    <article class="page compact-page" data-page="08 / 08">
+      <p class="eyebrow">Reference · Handoff vocabulary</p>
+      <h2>개발 핸드오프 용어를 기획자의 말로 풀면 이렇습니다</h2>
+      <p class="lead">용어의 목적은 개발자가 추측하지 않게 만드는 것입니다. 산출물 이름보다 “어떤 질문에 답하는가”를 먼저 확인하세요.</p>
+      <div class="term-grid">
+        <section><strong>PRD · 제품 정의</strong><span>누구의 어떤 문제를 왜 풀며, 이번 범위에서 무엇을 제외하는가?</span></section>
+        <section><strong>POL · 정책</strong><span>허용·제한·계산·권한·예외에 적용할 비즈니스 규칙은 무엇인가?</span></section>
+        <section><strong>REQ · 요구사항</strong><span>사용자 또는 시스템이 실제로 할 수 있어야 하는 행동은 무엇인가?</span></section>
+        <section><strong>IA · 정보 구조</strong><span>정보와 기능을 어떤 메뉴·화면·위계로 묶고 찾게 할 것인가?</span></section>
+        <section><strong>SCR / FLOW · 화면과 흐름</strong><span>각 화면에 무엇이 보이고, 행동 뒤 어디로 이동하며 예외 때 어떻게 되는가?</span></section>
+        <section><strong>TC · 테스트 조건</strong><span>어떤 입력과 행동에서 어떤 결과가 나오면 구현 완료라고 판단하는가?</span></section>
+        <section><strong>FEAT · 개발 기능 묶음</strong><span>이번 개발 단위가 참조하는 요구사항·화면·정책·테스트는 무엇인가?</span></section>
+        <section><strong>API · 시스템 연결 규칙</strong><span>화면과 서버가 어떤 데이터를 어떤 형식으로 주고받는가?</span></section>
+        <section><strong>컴포넌트 · 재사용 UI</strong><span>버튼·입력창처럼 여러 화면에서 같은 규칙으로 반복 사용하는 화면 조각</span></section>
+        <section><strong>디자인 토큰</strong><span>색·간격·글자 크기처럼 디자인 값을 이름으로 정해 일관되게 쓰는 기준</span></section>
+        <section><strong>QA · 품질 확인</strong><span>구현 결과가 요구사항·화면·테스트 조건과 같은지 확인하는 활동</span></section>
+        <section><strong>WBS / 스프린트</strong><span>일을 작은 작업으로 나눈 계획 / 정해진 기간에 실행할 작업 묶음</span></section>
+        <section><strong>manifest · 인계 목록표</strong><span>어떤 파일의 어느 버전을 넘겼는지 한눈에 확인하는 목차 겸 영수증</span></section>
+        <section><strong>hash · 디지털 지문</strong><span>파일 내용이 달라지면 값도 바뀌어 동결 이후 변경 여부를 확인하는 값</span></section>
+      </div>
+      <div class="callout"><b>읽는 순서</b><p><strong>왜</strong>(PRD·POL) → <strong>무엇을</strong>(REQ·FEAT) → <strong>어떻게</strong>(IA·SCR·FLOW) → <strong>완료 기준</strong>(TC·QA) 순으로 읽습니다.</p></div>
+      <footer class="page-footer"><span>Releasekit Plugin 1.0 · 참고</span><span>개발 인계 용어</span></footer>
+    </article>
+  </main>
+</body>
+</html>
