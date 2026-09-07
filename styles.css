@@ -34,7 +34,10 @@
 
 * { box-sizing: border-box; }
 
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+  scrollbar-gutter: stable;
+}
 
 body {
   margin: 0;
@@ -67,7 +70,8 @@ button, input, textarea, select, code { font-family: inherit; }
 .site-bar strong { font-size: var(--text-md); font-weight: var(--weight-bold); line-height: 1; letter-spacing: -.02em; }
 .site-bar strong a { display: block; padding: 0; border-radius: 0; color: inherit; font-size: inherit; font-weight: inherit; line-height: inherit; background: none; }
 .site-bar nav { display: flex; gap: 6px; }
-.site-bar nav a { padding: 7px 11px; border-radius: 999px; color: #d7d6d1; text-decoration: none; font-size: var(--text-sm); }
+.site-bar nav a { display: flex; align-items: center; justify-content: center; min-height: 34px; padding: 7px 11px; border-radius: 999px; color: #d7d6d1; text-decoration: none; font-size: var(--text-sm); white-space: nowrap; }
+.site-bar nav a:nth-child(-n+2) { min-width: 82px; }
 .site-bar nav a:hover, .site-bar nav a[aria-current="page"] { color: #fff; background: #ffffff18; }
 
 .document {
