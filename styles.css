@@ -336,6 +336,12 @@ p { color: var(--body); }
 .workflow-figure img { display: block; width: 100%; height: auto; border: 1px solid var(--line); border-radius: 14px; background: #fff; }
 .workflow-figure figcaption { margin-top: 12px; color: var(--muted); font-size: var(--text-sm); line-height: 1.55; text-align: center; }
 
+.product-screen-page { display: flex; flex-direction: column; }
+.product-screen-page .lead { max-width: 44em; margin-bottom: 0; font-size: var(--text-md); }
+.product-screen-figure { margin: 16mm 0 0; }
+.product-screen-figure img { display: block; width: 100%; height: auto; border: 1px solid var(--line); border-radius: 14px; background: #fff; box-shadow: 0 12px 28px #28272216; }
+.product-screen-figure figcaption { margin-top: 10px; color: var(--muted); font-size: var(--text-sm); text-align: center; }
+
 .landing-inner { width: 100%; }
 .landing h1 { max-width: none; font-size: 36px; line-height: 1.2; }
 .landing-title-line { white-space: nowrap; }
